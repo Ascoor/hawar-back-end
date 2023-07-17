@@ -34,3 +34,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/fees', [MemberFeeController::class, 'getMemberFees']);
 Route::get('/members', [MemberController::class, 'index']);
+Route::get('/parent-members', [MemberController::class, 'parentMembers']);

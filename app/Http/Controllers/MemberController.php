@@ -21,6 +21,15 @@ class MemberController extends Controller
         }
 
 
+        public function getParentMembers(Request $request)
+        {
+            $memberCode = $request->input('Mem_Code');
+
+            // Fetch fees for the specified member code
+            $parnetMembers = Member::where('Mem_ParentMember', $memberCode)->get();
+
+            return response()->json($parnetMembers);
+        }
     /**
      * Show the form for creating a new resource.
      *
