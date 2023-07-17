@@ -1,6 +1,8 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MemberFeeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +28,9 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/members}', [MemberController::class, 'index']);
+Route::get('/fees', [MemberFeeController::class, 'getMemberFees']);
+Route::get('/members', [MemberController::class, 'index']);

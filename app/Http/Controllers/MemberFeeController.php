@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 class MemberFeeController extends Controller
 {
 
+    public function getMemberFees(Request $request)
+    {
+        $memberCode = $request->input('Mem_Code');
+
+        // Fetch fees for the specified member code
+        $fees = MemberFee::where('Mem_Code', $memberCode)->select('Fee_ID', 'Fee_Year', 'Fee_Amount', 'Fee_Date', 'Fee_RecieptNumber', 'Fee_Status')->get();
+
+        return response()->json($fees);
+    }
     /**
      * Display a listing of the resource.
      *
