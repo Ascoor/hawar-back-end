@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            CsvInsertSeeder::class,
             CsvInsertMembersSeeder::class,
+            CsvInsertSeeder::class,
             UserSeeder::class,
             
         ]);

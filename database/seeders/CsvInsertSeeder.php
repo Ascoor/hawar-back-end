@@ -10,82 +10,126 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class CsvInsertSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * تنفيذ بذر البيانات في قاعدة البيانات.
      *
      * @return void
      */
     public function run()
     {
-        // Open the CSV file for reading
+        // فتح ملف CSV للقراءة
         $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
 
-        // Begin the database transaction
+        // بدء التحويل في قاعدة البيانات
         DB::beginTransaction();
 
-        // Initialize Symfony ConsoleOutput
+        // تهيئة Symfony ConsoleOutput
         $output = new ConsoleOutput();
 
         try {
-            // Define the number of rows to process per chunk
+            // تحديد عدد الصفوف لمعالجتها في كل دفعة
             $chunkSize = 1000;
 
-            // Initialize a counter
+            // تهيئة عداد
             $counter = 0;
 
             while (($data = fgetcsv($csvFile)) !== false) {
-                // Increment the counter
+                // زيادة العداد
                 $counter++;
 
-                // Display the current row being processed
-                $output->writeln("Processing row: $counter");
+                // عرض الصف الحالي الذي يتم معالجته
+                $output->writeln("جاري معالجة الصف: $counter");
 
-                // Map the CSV data to your table columns
+                // ربط بيانات CSV بأعمدة الجدول
                 $rowData = [
                     'Mem_ID' => $data[0],
                     'Mem_Name' => $data[1],
                     'Mem_Code' => $data[2],
                     'Mem_Address' => $data[3],
-                    'Mem_HomePhone' => $data[4],
-                    'Mem_Mobile' => $data[5],
-                    'Mem_WorkPhone' => $data[6],
+                    'Mem_HomePhone' => $this->formatPhoneNumber($data[4]),
+                    'Mem_Mobile' => $this->formatPhoneNumber($data[5]),
+                    'Mem_WorkPhone' => $this->formatPhoneNumber($data[6]),
                     'Fee_ID' => $data[7],
                     'Fee_Year' => $data[8],
                     'Fee_Amount' => $data[9],
                     'Fee_Date' => $data[10],
                     'Fee_RecieptNumber' => $data[11],
                     'Fee_Status' => $data[12],
-
                 ];
 
-
-                // Create a new model instance
+                // إنشاء نموذج جديد
                 $memberFee = new MemberFee($rowData);
                 $memberFee->timestamps = false;
-                // Save the model
+
+                // حفظ النموذج
                 $memberFee->save();
 
-                // Commit the transaction every chunkSize iterations
+                // التحويل في قاعدة البيانات كلما اكتملت الدفعة
                 if ($counter % $chunkSize === 0) {
                     DB::commit();
                     DB::beginTransaction();
                 }
             }
 
-            // Commit any remaining changes
+            // التحويل في قاعدة البيانات لأي تغييرات متبقية
             DB::commit();
 
-            // Close the CSV file
+            // إغلاق ملف CSV
             fclose($csvFile);
         } catch (\Throwable $e) {
-            // Rollback the transaction on error
+            // إلغاء التحويل في حالة وجود خطأ
             DB::rollBack();
 
-            // Close the CSV file
+            // إغلاق ملف CSV
             fclose($csvFile);
 
-            // Handle the exception
-            // (e.g., log the error, display an error message, etc.)
+            // التعامل مع الخطأ
+            // (مثلاً، تسجيل الخطأ، عرض رسالة خطأ، إلخ)
             dd($e->getMessage());
         }
+    }
+
+    /**
+     * تنسيق رقم الهاتف وفقًا للقواعد المحددة.
+     *
+     * @param  string  $phoneNumber
+     * @return string
+     */
+    private function formatPhoneNumber($phoneNumber)
+    {
+        // إزالة أي حروف غير رقمية من الرقم
+        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+        // التحقق من طول الرقم
+        if (strlen($phoneNumber) === 11) {
+            // التحقق مما إذا كان الرقم يبدأ بـ 011، 012، 010، أو 015
+            if (preg_match('/^(011|012|010|015)/', $phoneNumber)) {
+                return $phoneNumber;
+            } elseif (substr($phoneNumber, 0, 3) === '018') {
+                // تغيير البادئة إلى 0128
+                return '0128' . substr($phoneNumber, 3);
+            }
+        } elseif (strlen($phoneNumber) === 10) {
+            // التحقق مما إذا كان الرقم يبدأ بـ 010
+            if (substr($phoneNumber, 0, 3) === '010') {
+                return '0100' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '016') {
+                // تغيير البادئة إلى 0106
+                return '0106' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '100') {
+                // تغيير البادئة إلى 0100
+                return '0100' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '10') {
+                // تغيير البادئة إلى 010
+                return '010' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '012') {
+                // تغيير البادئة إلى 0122
+                return '0122' . substr($phoneNumber, 3);
+            }
+        } elseif (strlen($phoneNumber) === 9 && $phoneNumber[0] !== '0') {
+            // إضافة صفر في البداية وتطبيق القواعد مرة أخرى
+            return $this->formatPhoneNumber('0' . $phoneNumber);
+        }
+        // إذا لم تتطابق أي من القواعد، استعيد الرقم الأصلي
+        return $phoneNumber;
     }
 }

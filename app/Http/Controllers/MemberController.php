@@ -15,10 +15,11 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = Member::paginate(30);
-
+        $members = Member::where('MembershipType', 'عضو عامل')->paginate(30);
+    
         return response()->json($members);
-        }
+    }
+    
 
 
         public function getParentMembers(Request $request)
