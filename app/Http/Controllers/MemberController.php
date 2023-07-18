@@ -30,69 +30,15 @@ class MemberController extends Controller
 
             return response()->json($parnetMembers);
         }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+        public function getMemberBySearch($term)
     {
-        //
-    }
+        // Your logic to fetch members based on the search term
+        $members = Member::where('Mem_Name', 'like', '%'.$term.'%')
+                         ->orWhere('Mem_Code', 'like', '%'.$term.'%')
+                         ->orWhere('Mem_BOD', 'like', '%'.$term.'%')
+                         ->orWhere('Mem_Mobile', 'like', '%'.$term.'%')
+                         ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Member  $member
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Member $member)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Member  $member
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Member $member)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Member  $member
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Member $member)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Member  $member
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Member $member)
-    {
-        //
+        return response()->json(['data' => $members]);
     }
 }
