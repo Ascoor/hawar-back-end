@@ -22,6 +22,15 @@ class MemberController extends Controller
     
 
 
+        public function getMasterMember(Request $request)
+        {
+            $Mem_relation = $request->input('Mem_Relation');
+
+            // Fetch fees for the specified member code
+            $masterMember = Member::where('Mem_Code', $Mem_relation)->get();
+
+            return response()->json($masterMember);
+        }
         public function getParentMembers(Request $request)
         {
             $memberCode = $request->input('Mem_Code');
