@@ -13,13 +13,19 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $members = Member::where('MembershipType', 'عضو عامل')->paginate(30);
-    
-        return response()->json($members);
-    }
-    
+
+     public function index()
+     {
+         $members = Member::where('MembershipType', 'عضو عامل')->paginate(30);
+
+         return response()->json([
+             'data' => $members->items(),
+             'current_page' => $members->currentPage(),
+             'per_page' => $members->perPage(),
+             'total' => $members->total(),
+             'last_page' => $members->lastPage(),
+         ]);
+        }
 
 
         public function getMasterMember(Request $request)
