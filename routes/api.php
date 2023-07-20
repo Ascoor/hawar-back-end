@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberFeeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MemberLookupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,5 +37,13 @@ Route::get('/fees', [MemberFeeController::class, 'getMemberFees']);
 Route::get('/members', [MemberController::class, 'index']);
 Route::get('/parent-members', [MemberController::class, 'getParentMembers']);
 Route::get('/master-member-relation', [MemberController::class, 'getMasterMember']);
-
 Route::get('/member-search/{term}', [MemberController::class, 'getMemberBySearch']);
+
+// 
+
+//    MemberLookup Routes
+
+Route::get('member_lookups', [MemberLookupController::class, 'index']);
+Route::post('member_lookups', [MemberLookupController::class, 'store']);
+Route::put('member_lookups/{id}', [MemberLookupController::class, 'update']);
+Route::delete('member_lookups/{id}', [MemberLookupController::class, 'destroy']);

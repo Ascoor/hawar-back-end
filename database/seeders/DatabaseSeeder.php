@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CsvInsertMembersSeeder::class,
             CsvInsertSeeder::class,
             UserSeeder::class,
+            MemberLookupsSeeder::class,
             
         ]);
     }
