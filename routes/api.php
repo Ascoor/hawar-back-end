@@ -35,11 +35,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/fees', [MemberFeeController::class, 'getMemberFees']);
 Route::get('/members', [MemberController::class, 'index']);
-Route::get('/parent-members', [MemberController::class, 'getParentMembers']);
-Route::get('/master-member-relation', [MemberController::class, 'getMasterMember']);
-Route::get('/member-search/{term}', [MemberController::class, 'getMemberBySearch']);
 
-// 
+
+// Define routes for fetching members
+Route::get('/member-category/{Category}', [MemberController::class, 'getCategoryMembers']);
+
+
+
+//
 
 //    MemberLookup Routes
 

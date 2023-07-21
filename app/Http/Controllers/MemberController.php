@@ -88,5 +88,28 @@ class MemberController extends Controller
 }
 
 
+public function getCategoryMembers($category)
+{
+    $query = Member::orderBy('LastPayedFees', 'desc');
 
+    switch ($category) {
+        case 'work':
+            $query->where('Category', 'عضو عامل');
+            break;
+        case 'foundation':
+            $query->where('Category', 'عضو مؤسس');
+            break;
+        case 'partner':
+            $query->where('Category', 'عضو تابع');
+            break;
+        // Add any other cases for additional categories
+        default:
+            // Add any other conditions for 'Else' category here
+            break;
+    }
+
+    $members = $query->get();
+
+    return response()->json($members);
+}
 }
