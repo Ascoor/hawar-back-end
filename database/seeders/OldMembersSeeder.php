@@ -116,9 +116,9 @@ class OldMembersSeeder extends Seeder
                     $rowData['RenewalStatus'] = 'unrenewed';
                 }                $rowData = ['RegNum' => $data[3],
                 'Name' => $data[2],
-                'FamilyId' => $data[30],
+                'FamilyId' => $data[34],
                 'Category' => $data[11],
-                'Relation' => $data[31],
+                'Relation' => $data[30],
                 'Address' => $data[13],
                 'City' => 'المنصورة',
                 'State' => 'الدقهلية',
