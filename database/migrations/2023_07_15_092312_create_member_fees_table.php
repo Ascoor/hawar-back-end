@@ -15,7 +15,7 @@ class CreateMemberFeesTable extends Migration
             $table->string('Name')->nullable();
             $table->string('RegNum')->nullable();
             $table->string('FeeYear')->nullable();
-            $table->string('Fee_Amount', 8, 2)->nullable();
+            $table->string('FeeAmount', 8, 2)->nullable();
             $table->string('FeeDate')->nullable();
             $table->string('FeeRecieptNumber')->nullable();
             $table->string('FeeStatus')->nullable();
