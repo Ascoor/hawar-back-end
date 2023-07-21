@@ -74,12 +74,6 @@ class OldMembersSeeder extends Seeder
 
         return $email;
     }
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         // فتح ملف CSV للقراءة
@@ -114,52 +108,74 @@ class OldMembersSeeder extends Seeder
                     $rowData['RenewalStatus'] = 'renewed';
                 } else {
                     $rowData['RenewalStatus'] = 'unrenewed';
-                }                $rowData = ['RegNum' => $data[3],
-                'Name' => $data[2],
-                'FamilyId' => $data[34],
-                'Category' => $data[11],
-                'Relation' => $data[30],
-                'Address' => $data[13],
-                'City' => 'المنصورة',
-                'State' => 'الدقهلية',
-                'CountryId' => '63',
-                'PostalCode' => '35111',
-                'Profession' => $data[9],
-                'JobCategory' => $data[10],
-                'Status' => $data[23],
-                'ExcludedCategories' => $data[15],
-                'Phone' => $this->formatPhoneNumber($data[17]),
-                'CreatedAt' =>  $this->convertToArabicDate($data[14]),
-                'NationalId' => $data[5],
-                'BOD' =>  $this->convertToArabicDate($data[4]),
-                'Relegion' => $data[12],
-                'DateOfSubscription' => $this->convertToArabicDate($data[14]),
-                'HomePhone' => $data[16],
-                'WorkPhone' => $data[19],
-                'MemberCardName' => $data[24],
-                'MemberGraduationDescription' => $data[26],
-                'RenewalStatus' => $rowData['RenewalStatus'], // Set RenewalStatus based on Remarks
-
-                'Remarks' => $this->convertToArabicDate($data[33]),
-                                    'Note2' => $data[27],
-                'Note3' => $data[28],
-                'Note4' => $data[29],
-                'Age' => $this->calculateAge($data[4]), // Calculate age from the BOD column
-            'Email' => $this->generateEmail($data[3]), // Generate email using RegNum column
-
-
-                'Gender' => $data[8],
-                'Receiver' => $data[18],
-                'Photo' => $data[20],
-                'Note1' => $data[21], // ملاحظات باللغة العربية
-                'LastPayedFees' => $data[22],
+                }
+                $rowData = [
+                    'RegNum' => $data[3],
+                    'Name' => $data[2],
+                    'FamilyId' => $data[34],
+                    'Category' => $data[11],
+                    'Relation' => $data[30],
+                    'Address' => $data[13],
+                    'City' => 'المنصورة',
+                    'State' => 'الدقهلية',
+                    'CountryId' => '63',
+                    'PostalCode' => '35111',
+                    'Profession' => $data[9],
+                    'JobCategory' => $data[10],
+                    'Status' => $data[23],
+                    'ExcludedCategories' => $data[15],
+                    'Phone' => $this->formatPhoneNumber($data[17]),
+                    'CreatedAt' => $this->convertToArabicDate($data[14]),
+                    'NationalId' => $data[5],
+                    'BOD' => $this->convertToArabicDate($data[4]),
+                    'Relegion' => $data[12],
+                    'DateOfSubscription' => $this->convertToArabicDate($data[14]),
+                    'HomePhone' => $data[16],
+                    'WorkPhone' => $data[19],
+                    'MemberCardName' => $data[24],
+                    'MemberGraduationDescription' => $data[26],
+                    'RenewalStatus' => $rowData['RenewalStatus'], // Set RenewalStatus based on Remarks
+                    'Remarks' => $this->convertToArabicDate($data[33]),
+                    'Note2' => $data[27],
+                    'Note3' => $data[28],
+                    'Note4' => $data[29],
+                    'Age' => $this->calculateAge($data[4]), // Calculate age from the BOD column
+                    'Email' => $this->generateEmail($data[3]), // Generate email using RegNum column
+                    'Gender' => $data[8],
+                    'Receiver' => $data[18],
+                    'Photo' => $data[20],
+                    'Note1' => $data[21], // ملاحظات باللغة العربية
+                    'LastPayedFees' => $data[22],
                 ];
 
-                // إنشاء نموذج جديد
+                // Insert data into the members table
                 $member = new Member($rowData);
                 $member->timestamps = false;
-                // حفظ النموذج
                 $member->save();
+
+                // Insert data into the member_category table based on the religion
+                if ($data[12] === 'مسلم') {
+                    $categoryId = 6;
+                    $subCategoryId = 1;
+                } elseif ($data[12] === 'مسيحى') {
+                    $categoryId = 6;
+                    $subCategoryId = 2;
+                } else {
+                    // إذا كانت القيمة غير "مسلم" أو "مسيحي" يمكنك تعيين قيم افتراضية أخرى أو تجاوز القيمة في حالة عدم الحاجة إلى إضافة تصنيفات رئيسية وفرعية
+                    $categoryId = null;
+                    $subCategoryId = null;
+                }
+
+                // Check if there are values for the category and subcategory, then insert into member_category table
+                if ($categoryId !== null && $subCategoryId !== null) {
+                    $memberCategoryData = [
+                        'member_id' => $member->id,
+                        'category_id' => $categoryId,
+                        'sub_category_id' => $subCategoryId,
+                    ];
+
+                    DB::table('member_category')->insert($memberCategoryData);
+                }
 
                 // تنفيذ عملية المعاملة كل مجموعة من الصفوف
                 if ($counter % $chunkSize === 0) {
