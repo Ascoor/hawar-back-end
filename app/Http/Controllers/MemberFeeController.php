@@ -10,10 +10,10 @@ class MemberFeeController extends Controller
 
     public function getMemberFees(Request $request)
     {
-        $memberCode = $request->input('Mem_Code');
+        $RegNum = $request->input('RegNum');
 
         // Fetch fees for the specified member code
-        $fees = MemberFee::where('Mem_Code', $memberCode)->select('Fee_ID', 'Fee_Year', 'Fee_Amount', 'Fee_Date', 'Fee_RecieptNumber', 'Fee_Status')->get();
+        $fees = MemberFee::where('RegNum', $RegNum)->select('FeeYear', 'FeeAmount', 'FeeDate', 'FeeRecieptNumber', 'FeeStatus')->get();
 
         return response()->json($fees);
     }
@@ -54,10 +54,26 @@ class MemberFeeController extends Controller
      * @param  \App\Models\MemberFee  $memberFee
      * @return \Illuminate\Http\Response
      */
-    public function show(MemberFee $memberFee)
+
+    public function show($RegNum)
     {
-        //
+        try {
+            // Fetch member fees by RegNum
+            $fees = MemberFee::where('RegNum', $RegNum)->get();
+
+            // Check if fees were found for the member
+            if ($fees->isEmpty()) {
+                return response()->json(['message' => 'No fees found for the member'], 404);
+            }
+
+            // Return the member fees as a JSON response
+            return response()->json($fees, 200);
+        } catch (\Exception $e) {
+            // Handle any errors that may occur during the database query
+            return response()->json(['message' => 'Failed to fetch member fees'], 500);
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
