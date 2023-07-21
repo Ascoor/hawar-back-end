@@ -86,9 +86,6 @@ class MemberController extends Controller
 
 
 }
-
-
-
 public function getCategoryMembers($category)
 {
     $categories = [
@@ -102,9 +99,14 @@ public function getCategoryMembers($category)
     ];
 
     if (array_key_exists($category, $categories)) {
-        $members = Member::where('Category', $categories[$category])
-            ->orderBy('LastPayedFees', 'desc')
-            ->get();
+        $query = Member::where('Category', $categories[$category])->orderBy('LastPayedFees', 'desc');
+
+        // If the category is 'عضو عامل' or 'عضو تابع', limit the result to 100 members
+        if ($category === 'work' || $category === 'affiliate') {
+            $members = $query->take(100)->get();
+        } else {
+            $members = $query->get();
+        }
 
         return response()->json($members);
     } else {
