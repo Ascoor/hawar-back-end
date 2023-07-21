@@ -14,6 +14,7 @@ class CreateMembersTable extends Migration
             $table->string('Name')->nullable();
             $table->string('FamilyId')->nullable();
             $table->string('Category')->nullable();
+            $table->string('JobCategory')->nullable();
             $table->string('Relation')->nullable();
             $table->string('City')->nullable();
             $table->string('State')->nullable();
@@ -25,7 +26,7 @@ class CreateMembersTable extends Migration
             $table->string('ExcludedCategories')->nullable();
             $table->string('Email')->nullable();
             $table->string('Phone')->nullable();
-            $table->string('photo')->nullable();
+            $table->string('Photo')->nullable();
             $table->string('Receiver')->nullable();
             $table->date('CreatedAt')->nullable();
             $table->string('AppDecision')->nullable();
@@ -33,7 +34,6 @@ class CreateMembersTable extends Migration
             $table->string('NationalId')->nullable();
             $table->string('Bod')->nullable();
             $table->integer('Age')->nullable();
-            $table->string('Religion')->nullable();
             $table->integer('CountryId')->nullable();
             $table->string('RenewalStatus')->nullable();
             $table->string('PostalCode')->nullable();

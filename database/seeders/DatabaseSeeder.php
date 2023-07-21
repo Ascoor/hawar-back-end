@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
              OldMembersSeeder::class,
             // CsvInsertSeeder::class,
-            // UserSeeder::class,
-            // MemberLookupsSeeder::class,
-        //  CategoriesTableSeeder::class,
-        //   SubcategoriesTableSeeder::class,
+             UserSeeder::class,
+
+         CategoriesTableSeeder::class,
+          SubcategoriesTableSeeder::class,
 
         ]);
     }

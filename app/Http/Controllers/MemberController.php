@@ -8,24 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-     public function index()
-     {
-         $members = Member::where('MembershipType', 'عضو عامل')->paginate(30);
-
-         return response()->json([
-             'data' => $members->items(),
-             'current_page' => $members->currentPage(),
-             'per_page' => $members->perPage(),
-             'total' => $members->total(),
-             'last_page' => $members->lastPage(),
-         ]);
-        }
+  
+         public function index()
+         {
+             $members = Member::orderBy('Remarks', 'desc')->limit(100)
+                 ->get();
+             return response()->json($members);
+         }   
 
 
         public function getMasterMember(Request $request)
