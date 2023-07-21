@@ -88,20 +88,21 @@ class MemberController extends Controller
 }
 
 
+
 public function getCategoryMembers($category)
 {
-    $subCategories = [
+    $categories = [
         'work' => 'عضو عامل',
         'affiliate' => 'عضو تابع',
         'founding' => 'عضو مؤسس',
         'honory' => 'عضو فخري',
         'seasonal' => 'عضو موسمي',
-        'athelitic' => 'عضو رياضي',
+        'athletic' => 'عضو رياضي',
         'A permit' => 'تصريح',
     ];
 
-    if (array_key_exists($category, $subCategories)) {
-        $members = Member::where('Category', $subCategories[$category])
+    if (array_key_exists($category, $categories)) {
+        $members = Member::where('Category', $categories[$category])
             ->orderBy('LastPayedFees', 'desc')
             ->get();
 
@@ -111,5 +112,4 @@ public function getCategoryMembers($category)
         return response()->json(['message' => 'Invalid category'], 404);
     }
 }
-
 }
