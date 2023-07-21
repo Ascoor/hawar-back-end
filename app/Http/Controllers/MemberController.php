@@ -90,26 +90,26 @@ class MemberController extends Controller
 
 public function getCategoryMembers($category)
 {
-    $query = Member::orderBy('LastPayedFees', 'desc');
+    $subCategories = [
+        'work' => 'عضو عامل',
+        'affiliate' => 'عضو تابع',
+        'founding' => 'عضو مؤسس',
+        'honory' => 'عضو فخري',
+        'seasonal' => 'عضو موسمي',
+        'athelitic' => 'عضو رياضي',
+        'A permit' => 'تصريح',
+    ];
 
-    switch ($category) {
-        case 'work':
-            $query->where('Category', 'عضو عامل');
-            break;
-        case 'foundation':
-            $query->where('Category', 'عضو مؤسس');
-            break;
-        case 'partner':
-            $query->where('Category', 'عضو تابع');
-            break;
-        // Add any other cases for additional categories
-        default:
-            // Add any other conditions for 'Else' category here
-            break;
+    if (array_key_exists($category, $subCategories)) {
+        $members = Member::where('Category', $subCategories[$category])
+            ->orderBy('LastPayedFees', 'desc')
+            ->get();
+
+        return response()->json($members);
+    } else {
+        // Handle invalid category here
+        return response()->json(['message' => 'Invalid category'], 404);
     }
-
-    $members = $query->get();
-
-    return response()->json($members);
 }
+
 }
