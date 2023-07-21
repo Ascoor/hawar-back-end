@@ -43,4 +43,8 @@ class Member extends Model
         'Note3',
         'Note4',
     ];
+    public function fees()
+    {
+        return $this->hasMany(MemberFee::class, 'member_id', 'id');
+    }
 }

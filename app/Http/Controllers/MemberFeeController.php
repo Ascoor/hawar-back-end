@@ -10,10 +10,10 @@ class MemberFeeController extends Controller
 
     public function getMemberFees(Request $request)
     {
-        $RegNum = $request->input('RegNum');
+        $RegNum = $request->input('member_id');
 
         // Fetch fees for the specified member code
-        $fees = MemberFee::where('RegNum', $RegNum)->select('FeeYear', 'FeeAmount', 'FeeDate', 'FeeRecieptNumber', 'FeeStatus')->get();
+        $fees = MemberFee::where('member_id', $RegNum)->select('FeeYear', 'FeeAmount', 'FeeDate', 'FeeRecieptNumber', 'FeeStatus')->get();
 
         return response()->json($fees);
     }
