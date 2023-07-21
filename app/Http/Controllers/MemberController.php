@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
-  
+
          public function index()
          {
-             $members = Member::orderBy('Remarks', 'desc')->limit(100)
+             $members = Member::orderBy('LastPayedFees', 'desc')->limit(100)
                  ->get();
              return response()->json($members);
-         }   
+         }
 
 
         public function getMasterMember(Request $request)
