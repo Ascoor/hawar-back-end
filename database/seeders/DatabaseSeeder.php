@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +15,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            CsvInsertMembersSeeder::class,
-            CsvInsertSeeder::class,
-            UserSeeder::class,
-            MemberLookupsSeeder::class,
-            
+             OldMembersSeeder::class,
+            // CsvInsertSeeder::class,
+            // UserSeeder::class,
+            // MemberLookupsSeeder::class,
+        //  CategoriesTableSeeder::class,
+        //   SubcategoriesTableSeeder::class,
+
         ]);
     }
 }

@@ -57,4 +57,47 @@ class MemberController extends Controller
 
         return response()->json(['data' => $members]);
     }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            // Add validation rules for the fields you want to validate during member creation.
+            'Name' => 'required|string|max:255',
+            'FamilyId' => 'required|string|max:255',
+            'Category' => 'required|string|max:255',
+            'City' => 'required|string|max:255',
+            'State' => 'required|string|max:255',
+            'Address' => 'required|string',
+            // Add more validation rules for other fields if necessary.
+        ]);
+
+        $member = Member::create($request->all());
+        return response()->json($member, 201);
+    }
+
+    public function show($id)
+    {
+        $member = Member::findOrFail($id);
+        return response()->json($member);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            // Add validation rules for the fields you want to validate during member update.
+            'Name' => 'required|string|max:255',
+            'FamilyId' => 'required|string|max:255',
+            'Category' => 'required|string|max:255',
+            'City' => 'required|string|max:255',
+            'State' => 'required|string|max:255',
+            'Address' => 'required|string',
+            // Add more validation rules for other fields if necessary.
+        ]);
+
+
+}
+
+
+
 }

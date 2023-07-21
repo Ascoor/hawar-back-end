@@ -6,59 +6,54 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateMembersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-
-            $table->string('Mem_Name')->nullable();
-            $table->string('Mem_Code')->nullable();
-            $table->string('Mem_BOD')->nullable();
-            $table->string('Mem_NID')->nullable();
-            $table->string('Graduation')->nullable();
-            $table->string('Mem_ParentMember')->nullable();
+            $table->string('RegNum')->nullable();
+            $table->string('Name')->nullable();
+            $table->string('FamilyId')->nullable();
+            $table->string('Category')->nullable();
+            $table->string('Relation')->nullable();
+            $table->string('City')->nullable();
+            $table->string('State')->nullable();
             $table->string('Gender')->nullable();
-            $table->string('Mem_Job')->nullable();
-            $table->string('JobCategory')->nullable();
-            $table->string('MembershipType')->nullable();
             $table->string('Relegion')->nullable();
-            $table->string('Mem_Address')->nullable();
-            $table->string('Mem_JoinDate')->nullable();
-            $table->string('Class')->nullable();
-            $table->string('Mem_HomePhone')->nullable();
-            $table->string('Mem_Mobile')->nullable();
-            $table->string('Mem_Receiver')->nullable();
-            $table->string('Mem_WorkPhone')->nullable();
-            $table->string('Mem_Photo')->nullable();
-            $table->string('Mem_Notes')->nullable();
-            $table->string('Mem_LastPayedFees')->nullable();
+            $table->string('Address')->nullable();
+            $table->string('Profession')->nullable();
             $table->string('Status')->nullable();
-            $table->string('MemCard_MemberName')->nullable();
-            $table->string('MemCard_MemberJobTitle')->nullable();
-            $table->string('Mem_GraduationDesc')->nullable();
-            $table->string('Mem_Notes_2')->nullable();
-            $table->string('Mem_Notes_3')->nullable();
-            $table->string('Mem_Notes_4')->nullable();
-            $table->string('Mem_Relation')->nullable();
-            $table->string('parentName')->nullable();
-            $table->string('Mem_IsMainMember')->nullable();
-            $table->string('Mem_BoardDecision_Date')->nullable();
-            $table->string('Mem_BoardDecision_Number')->nullable();
-
+            $table->string('ExcludedCategories')->nullable();
+            $table->string('Email')->nullable();
+            $table->string('Phone')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('Receiver')->nullable();
+            $table->date('CreatedAt')->nullable();
+            $table->string('AppDecision')->nullable();
+            $table->string('Number')->nullable();
+            $table->string('NationalId')->nullable();
+            $table->string('Bod')->nullable();
+            $table->integer('Age')->nullable();
+            $table->string('Religion')->nullable();
+            $table->integer('CountryId')->nullable();
+            $table->string('RenewalStatus')->nullable();
+            $table->string('PostalCode')->nullable();
+            $table->string('Facebook')->nullable();
+            $table->string('Twitter')->nullable();
+            $table->string('DateOfSubscription')->nullable();
+            $table->string('HomePhone')->nullable();
+            $table->string('WorkPhone')->nullable();
+            $table->string('LastPayedFees')->nullable();
+            $table->string('MemberCardName')->nullable();
+            $table->string('MemberGraduationDescription')->nullable();
+            $table->string('Remarks')->nullable();
+            $table->string('Note1')->nullable();
+            $table->string('Note2')->nullable();
+            $table->string('Note3')->nullable();
+            $table->string('Note4')->nullable();
+            $table->timestamps();
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('members');
