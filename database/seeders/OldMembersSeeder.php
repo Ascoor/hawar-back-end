@@ -108,13 +108,6 @@ class OldMembersSeeder extends Seeder
                 $output->writeln("جارٍ معالجة الصف: $counter");
 
                 $email = 'h-mem' . $data[3] . '@el-hawar.com';
-                $remarksDate = Carbon::parse($data[33]);
-                $currentYear = Carbon::now()->year;
-                if ($remarksDate->year > $currentYear) {
-                    $rowData['RenewalStatus'] = 'renewed';
-                } else {
-                    $rowData['RenewalStatus'] = 'unrenewed';
-                }
                 // ربط بيانات CSV بأعمدة الجدول
                 $rowData = [
                     'RegNum' => $data[3],
@@ -123,20 +116,13 @@ class OldMembersSeeder extends Seeder
                     'Category' => $data[11],
                     'Relation' => $data[31],
                     'Address' => $data[13],
-                    'City' => 'المنصورة',
-                    'State' => 'الدقهلية',
-                    'CountryId' => '63',
-                    'PostalCode' => '35111',
-                    'RenewalStatus' => $rowData['RenewalStatus'], // Set RenewalStatus based on Remarks
-    
-                    'Profession' => $data[9],
-                    'JobCategory' => $data[10],
+                    'Profession' => $data[10],
                     'Status' => $data[23],
                     'ExcludedCategories' => $data[15],
-                    'Phone' => $this->formatPhoneNumber($data[17]),
-                    'CreatedAt' =>  $this->convertToArabicDate($data[14]),
+                    'Phone' => $this->formatPhoneNumber($data[1]),
+                    'CreatedAt' => $this->convertToArabicDate($data[14]),
                     'NationalId' => $data[5],
-                    'BOD' =>  $this->convertToArabicDate($data[4]),
+                    'BOD' => $data[4],
                     'Relegion' => $data[12],
                     'DateOfSubscription' => $this->convertToArabicDate($data[14]),
                     'HomePhone' => $data[16],
@@ -144,8 +130,8 @@ class OldMembersSeeder extends Seeder
                     'MemberCardName' => $data[24],
                     'MemberGraduationDescription' => $data[26],
 
-                    'Remarks' => $this->convertToArabicDate($data[33]),
-                                        'Note2' => $data[27],
+                    'Remarks' => $data[33],
+                    'Note2' => $data[27],
                     'Note3' => $data[28],
                     'Note4' => $data[29],
                     'Age' => $this->calculateAge($data[4]), // Calculate age from the BOD column

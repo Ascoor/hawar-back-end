@@ -16,9 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
              OldMembersSeeder::class,
-            // CsvInsertSeeder::class,
-             UserSeeder::class,
 
+             UserSeeder::class,
          CategoriesTableSeeder::class,
           SubcategoriesTableSeeder::class,
 

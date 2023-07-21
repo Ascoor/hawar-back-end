@@ -215,6 +215,20 @@ class SubCategoriesTableSeeder extends Seeder
             ],
             // Add more subcategories for 'religion' as needed
         ];
+         // Assuming you have the ID of the 'RenewalStatus' category as 7
+        $RenewalStatusSubCategories = [
+            [
+                'category_id' => 7,
+                'name_en' => 'renewal',
+                'name_ar' => 'مجدد',
+            ],
+            [
+                'category_id' => 7,
+                'name_en' => 'unrenewal',
+                'name_ar' => 'غير مجدد',
+            ],
+            // Add more subcategories for 'RenewalStatus' as needed
+        ];
 
         foreach ($memberTypeSubCategories as $subCategory) {
             SubCategory::create($subCategory);
@@ -235,6 +249,9 @@ class SubCategoriesTableSeeder extends Seeder
             SubCategory::create($subCategory);
         }
         foreach ($religionSubCategories as $subCategory) {
+            SubCategory::create($subCategory);
+        }
+        foreach ($RenewalStatusSubCategories as $subCategory) {
             SubCategory::create($subCategory);
         }
     }

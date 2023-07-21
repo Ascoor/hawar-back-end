@@ -34,6 +34,10 @@ class CategoriesTableSeeder extends Seeder
                 'name' => 'religion',
 
             ],
+            [
+                'name' => 'RenewalStatus',
+
+            ],
         ];
 
         foreach ($categories as $category) {
