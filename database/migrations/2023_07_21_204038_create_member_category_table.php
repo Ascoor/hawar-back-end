@@ -13,11 +13,11 @@ class CreateMemberCategoryTable extends Migration
     public function up()
     {
         Schema::create('member_category', function (Blueprint $table) {
-            $table->id();
+
             $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade');
-            $table->timestamps();
+
         });
     }
 
