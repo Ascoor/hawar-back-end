@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\MemberFee;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -22,6 +23,16 @@ class HomeController extends Controller
         $femaleCount = Member::where('Gender', $memberFemale)->count();
         $countOver25 = Member::where('age', '>', $ageOver25)->count();
         $countOver60 = Member::where('age', '>', $ageOver60)->count();
+          // Get the current year
+    $currentYear = now()->year;
+
+    // Get the count of members who paid the fee in the current year
+    $membersPaidCurrentYear = MemberFee::whereYear('FeeDate', $currentYear)->count();
+
+    // Get the count of members who paid the fee in the previous year
+    $previousYear = $currentYear - 1;
+    $membersPaidPreviousYear = MemberFee::whereYear('FeeDate', $previousYear)->count();
+
 
         return response()->json([
             'workMemberCount' => $workMemberCount,
@@ -30,6 +41,8 @@ class HomeController extends Controller
             'femaleCount' => $femaleCount,
             'countOver25' => $countOver25,
             'countOver60' => $countOver60,
+            'membersPaidCurrentYear' => $membersPaidCurrentYear,
+            'membersPaidPreviousYear' => $membersPaidPreviousYear,
         ]);
     }
 
