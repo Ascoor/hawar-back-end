@@ -86,8 +86,10 @@ class MemberController extends Controller
 
 
 }
-public function getCategoryMembers($category)
+public function getCategoryMembers(Request $request)
 {
+    $category = $request->input('category'); // Assuming you are sending the selected category from the frontend
+
     $categories = [
         'work' => 'عضو عامل',
         'affiliate' => 'عضو تابع',
@@ -103,7 +105,7 @@ public function getCategoryMembers($category)
 
         // If the category is 'عضو عامل' or 'عضو تابع', limit the result to 100 members
         if ($category === 'work' || $category === 'affiliate') {
-            $members = $query->take(100)->get();
+            $members = $query->take(50)->get();
         } else {
             $members = $query->get();
         }
@@ -114,4 +116,5 @@ public function getCategoryMembers($category)
         return response()->json(['message' => 'Invalid category'], 404);
     }
 }
+
 }
