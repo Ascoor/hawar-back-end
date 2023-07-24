@@ -97,3 +97,4 @@ class CsvInsertSeeder extends Seeder
         return $member ? $member->id : null;
     }
 }
+    

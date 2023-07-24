@@ -42,10 +42,14 @@ Route::get('/members', [MemberController::class, 'index']);
 Route::get('/member-category', [MemberController::class, 'getCategoryMembers']);
 
 Route::get('/members/search/{term}', [MemberController::class, 'getMemberBySearch']);
-use App\Http\Controllers\HomeController;
 
-Route::get('member-work-count', [HomeController::class, 'memberWork']);
 
+
+Route::get('/member-work-count', [HomeController::class, 'memberWork']);
+Route::get('/other-counts', [HomeController::class, 'getOtherCounts']);
+Route::get('/gender-count', [HomeController::class, 'getGenderCount']);
+Route::get('/age-count', [HomeController::class, 'getAgeCount']);
+Route::get('/category-count', [HomeController::class, 'getCategoryCount']);
 
 //
 
