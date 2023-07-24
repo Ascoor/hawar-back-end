@@ -55,25 +55,27 @@ class MemberFeeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($RegNum)
-    {
-        try {
-            // Fetch member fees by RegNum
-            $fees = MemberFee::where('RegNum', $RegNum)->get();
-
-            // Check if fees were found for the member
-            if ($fees->isEmpty()) {
-                return response()->json(['message' => 'No fees found for the member'], 404);
-            }
-
-            // Return the member fees as a JSON response
-            return response()->json($fees, 200);
-        } catch (\Exception $e) {
-            // Handle any errors that may occur during the database query
-            return response()->json(['message' => 'Failed to fetch member fees'], 500);
-        }
-    }
-
+     public function show($Member_ID)
+     {
+         try {
+             // Fetch the latest member fee by FeeDate for the given Member_ID
+             $fee = MemberFee::where('Member_ID', $Member_ID)
+                             ->latest('FeeDate') // Order by FeeDate in descending order (latest first)
+                             ->first();
+     
+             // Check if a fee was found for the member
+             if (!$fee) {
+                 return response()->json(['message' => 'No fee found for the member'], 404);
+             }
+     
+             // Return the member fee as a JSON response
+             return response()->json($fee, 200);
+         } catch (\Exception $e) {
+             // Handle any errors that may occur during the database query
+             return response()->json(['message' => 'Failed to fetch member fee'], 500);
+         }
+     }
+     
 
     /**
      * Show the form for editing the specified resource.
