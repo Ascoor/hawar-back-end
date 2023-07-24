@@ -29,14 +29,15 @@ class CsvInsertSeeder extends Seeder
         try {
             // تحديد عدد الصفوف لمعالجتها في كل دفعة
             $chunkSize = 1000;
-            $startRow = 1; // The row number to start from
+            $lastProcessedRow = $this->getLastProcessedRow() + 1; // Get the last processed row number from the database
             $counter = 0;
 
             while (($data = fgetcsv($csvFile)) !== false) {
-                // Increment the counter and check if it reaches the chunk size
                 $counter++;
-                if ($counter < $startRow) {
-                    continue; // Skip rows until the starting row number is reached
+
+                // Skip rows until the starting row number is reached
+                if ($counter < $lastProcessedRow) {
+                    continue;
                 }
 
                 // Display the current row being processed
@@ -65,6 +66,9 @@ class CsvInsertSeeder extends Seeder
                 if ($counter % $chunkSize === 0) {
                     DB::commit();
                     DB::beginTransaction();
+
+                    // Store the last processed row number after processing the chunk
+                    $this->storeLastProcessedRow($counter);
                 }
             }
 
@@ -73,6 +77,10 @@ class CsvInsertSeeder extends Seeder
 
             // Close the CSV file
             fclose($csvFile);
+
+            // Store the last processed row number (end of the CSV file)
+            $this->storeLastProcessedRow($counter);
+
         } catch (\Throwable $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();
@@ -96,5 +104,32 @@ class CsvInsertSeeder extends Seeder
         $member = Member::where('RegNum', $regNum)->first();
         return $member ? $member->id : null;
     }
+
+    /**
+     * Get the last processed row number from the database.
+     *
+     * @return int
+     */
+    private function getLastProcessedRow()
+    {
+        // Replace the following line with your logic to retrieve the last processed row number
+        // from the database, for example, if you store the last row number in a table named `last_processed_row`:
+        return DB::table('last_processed_row')->value('row_number');
+        // For now, we'll return 0 as a placeholder.
+        return 0;
+    }
+
+    /**
+     * Store the last processed row number to the database.
+     *
+     * @param int $rowNumber
+     * @return void
+     */
+    private function storeLastProcessedRow($rowNumber)
+    {
+        // Replace the following line with your logic to store the last processed row number
+        // in the database, for example, if you store the last row number in a table named `last_processed_row`:
+        DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber]);
+        // For now, we'll leave it empty as a placeholder.
+    }
 }
-    
