@@ -4,12 +4,56 @@ namespace Database\Seeders;
 
 use App\Models\Member;
 use App\Models\MemberFee;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CsvInsertSeeder extends Seeder
 {
+ private function getLastProcessedRowTime()
+    {
+        // Replace the following line with your logic to retrieve the last processed row time
+        // from the database, for example, if you store the last processed row time in a table named `last_processed_row`:
+        return Carbon::parse(DB::table('last_processed_row')->value('updated_at'));
+    }
+
+    private function storeLastProcessedRow($rowNumber)
+    {
+        // Replace the following line with your logic to store the last processed row number and time
+        // in the database, for example, if you store the last row number and time in a table named `last_processed_row`:
+        DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber, 'updated_at' => Carbon::now()]);
+    }
+
+
+    /**
+     * تنسيق رقم العضوية وفقًا للقواعد المحددة.
+     *
+     * @param  string  $regNum
+     * @return int|null
+     */
+    private function getMemberIdByRegNum($regNum)
+    {
+        $member = Member::where('RegNum', $regNum)->first();
+        return $member ? $member->id : null;
+    }
+
+    /**
+     * Get the last processed row number from the database.
+     *
+     * @return int
+     */
+    private function getLastProcessedRow()
+    {
+        // Replace the following line with your logic to retrieve the last processed row number
+        // from the database, for example, if you store the last row number in a table named `last_processed_row`:
+        return DB::table('last_processed_row')->value('row_number');
+        // For now, we'll return 0 as a placeholder.
+        return 0;
+    }
+
+
+
     /**
      * تنفيذ بذر البيانات في قاعدة البيانات.
      *
@@ -93,43 +137,5 @@ class CsvInsertSeeder extends Seeder
         }
     }
 
-    /**
-     * تنسيق رقم العضوية وفقًا للقواعد المحددة.
-     *
-     * @param  string  $regNum
-     * @return int|null
-     */
-    private function getMemberIdByRegNum($regNum)
-    {
-        $member = Member::where('RegNum', $regNum)->first();
-        return $member ? $member->id : null;
-    }
 
-    /**
-     * Get the last processed row number from the database.
-     *
-     * @return int
-     */
-    private function getLastProcessedRow()
-    {
-        // Replace the following line with your logic to retrieve the last processed row number
-        // from the database, for example, if you store the last row number in a table named `last_processed_row`:
-        return DB::table('last_processed_row')->value('row_number');
-        // For now, we'll return 0 as a placeholder.
-        return 0;
-    }
-
-    /**
-     * Store the last processed row number to the database.
-     *
-     * @param int $rowNumber
-     * @return void
-     */
-    private function storeLastProcessedRow($rowNumber)
-    {
-        // Replace the following line with your logic to store the last processed row number
-        // in the database, for example, if you store the last row number in a table named `last_processed_row`:
-        DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber]);
-        // For now, we'll leave it empty as a placeholder.
-    }
 }

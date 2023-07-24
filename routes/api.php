@@ -45,11 +45,8 @@ Route::get('/members/search', [MemberController::class, 'getMemberBySearch']);
 
 
 
-Route::get('/member-work-count', [HomeController::class, 'memberWork']);
-Route::get('/other-counts', [HomeController::class, 'getOtherCounts']);
-Route::get('/gender-count', [HomeController::class, 'getGenderCount']);
-Route::get('/age-count', [HomeController::class, 'getAgeCount']);
-Route::get('/category-count', [HomeController::class, 'getCategoryCount']);
+Route::get('/member-count', [HomeController::class, 'getMemberCounts']);
+
 
 //
 

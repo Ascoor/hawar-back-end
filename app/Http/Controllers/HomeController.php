@@ -6,61 +6,31 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    // Other methods...
 
-    /**
-     * Get counts based on Gender.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getGenderCount(Request $request)
+    public function getMemberCounts()
     {
-        // Get the gender from the request
-        $gender = $request->input('gender');
+        $memberWork = 'عضو عامل';
+        $memberPart = 'عضو تابع';
+        $memberMale = 'ذكر';
+        $memberFemale = 'أنثى';
+        $ageOver25 = 25;
+        $ageOver60 = 60;
 
-        // Query the database to get the count of members with the specified gender
-        $count = Member::where('gender', $gender)->count();
+        $workMemberCount = Member::where('category', $memberWork)->count();
+        $partMemberCount = Member::where('category', $memberPart)->count();
+        $maleCount = Member::where('Gender', $memberMale)->count();
+        $femaleCount = Member::where('Gender', $memberFemale)->count();
+        $countOver25 = Member::where('age', '>', $ageOver25)->count();
+        $countOver60 = Member::where('age', '>', $ageOver60)->count();
 
-        // Return JSON response with the count
-        return response()->json(['count' => $count]);
+        return response()->json([
+            'workMemberCount' => $workMemberCount,
+            'partMemberCount' => $partMemberCount,
+            'maleCount' => $maleCount,
+            'femaleCount' => $femaleCount,
+            'countOver25' => $countOver25,
+            'countOver60' => $countOver60,
+        ]);
     }
 
-    /**
-     * Get counts based on Age.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getAgeCount(Request $request)
-    {
-        // Get the age from the request
-        $age = $request->input('age');
-
-        // Query the database to get the count of members with age greater than 25 and less than 60
-        $count = Member::where('age', '>', 25)
-            ->where('age', '<', 60)
-            ->count();
-
-        // Return JSON response with the count
-        return response()->json(['count' => $count]);
-    }
-
-    /**
-     * Get counts based on Category.
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getCategoryCount(Request $request)
-    {
-        // Get the category from the request
-        $category = $request->input('category');
-
-        // Query the database to get the count of members with the specified category
-        $count = Member::where('category', $category)->count();
-
-        // Return JSON response with the count
-        return response()->json(['count' => $count]);
-    }
 }
