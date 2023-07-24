@@ -35,18 +35,22 @@ class MemberController extends Controller
 
             return response()->json($parnetMembers);
         }
-        public function getMemberBySearch($term)
-    {
-        // Your logic to fetch members based on the search term
-        $members = Member::where('Mem_Name', 'like', '%'.$term.'%')
-                         ->orWhere('Mem_Code', 'like', '%'.$term.'%')
-                         ->orWhere('Mem_BOD', 'like', '%'.$term.'%')
-                         ->orWhere('Mem_Mobile', 'like', '%'.$term.'%')
-                         ->get();
-
-        return response()->json(['data' => $members]);
-    }
-
+        public function getMembersBySearch(Request $request)
+        {
+            $searchTerm = $request->input('searchTerm');
+    
+            // Your logic to fetch members based on the category and search term
+            $members = Member::where(function ($query) use ($searchTerm) {
+                                 $query->where('Name', 'like', '%' . $searchTerm . '%')
+                                       ->orWhere('RegNum', 'like', '%' . $searchTerm . '%')
+                                       ->orWhere('BOD', 'like', '%' . $searchTerm . '%')
+                                       ->orWhere('Phone', 'like', '%' . $searchTerm . '%');
+                             })
+                             ->get();
+    
+            return response()->json(['data' => $members]);
+        }
+    
 
     public function store(Request $request)
     {

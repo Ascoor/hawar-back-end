@@ -29,21 +29,23 @@ class CsvInsertSeeder extends Seeder
         try {
             // تحديد عدد الصفوف لمعالجتها في كل دفعة
             $chunkSize = 1000;
-
-            // تهيئة عداد
+            $startRow = 1; // The row number to start from
             $counter = 0;
 
             while (($data = fgetcsv($csvFile)) !== false) {
-                // زيادة العداد
+                // Increment the counter and check if it reaches the chunk size
                 $counter++;
+                if ($counter < $startRow) {
+                    continue; // Skip rows until the starting row number is reached
+                }
 
-                // عرض الصف الحالي الذي يتم معالجته
+                // Display the current row being processed
                 $output->writeln("جاري معالجة الصف: $counter");
 
-                // ربط بيانات CSV بأعمدة الجدول
+                // Map CSV data to table columns
                 $rowData = [
-             'Member_ID' => $this->getMemberIdByRegNum($data[2]),
-                'Name' => $data[1],
+                    'Member_ID' => $this->getMemberIdByRegNum($data[2]),
+                    'Name' => $data[1],
                     'RegNum' => $data[2],
                     'FeeYear' => $data[8],
                     'FeeAmount' => $data[9],
@@ -52,43 +54,42 @@ class CsvInsertSeeder extends Seeder
                     'FeeStatus' => $data[12],
                 ];
 
-                // إنشاء نموذج جديد
+                // Create a new model instance
                 $memberFee = new MemberFee($rowData);
                 $memberFee->timestamps = false;
 
-                // حفظ النموذج
+                // Save the model
                 $memberFee->save();
 
-                // التحويل في قاعدة البيانات كلما اكتملت الدفعة
+                // Commit the transaction every time the chunk size is reached
                 if ($counter % $chunkSize === 0) {
                     DB::commit();
                     DB::beginTransaction();
                 }
             }
 
-            // التحويل في قاعدة البيانات لأي تغييرات متبقية
+            // Commit any remaining changes in the database
             DB::commit();
 
-            // إغلاق ملف CSV
+            // Close the CSV file
             fclose($csvFile);
         } catch (\Throwable $e) {
-            // إلغاء التحويل في حالة وجود خطأ
+            // Rollback the transaction if an error occurs
             DB::rollBack();
 
-            // إغلاق ملف CSV
+            // Close the CSV file
             fclose($csvFile);
 
-            // التعامل مع الخطأ
-            // (مثلاً، تسجيل الخطأ، عرض رسالة خطأ، إلخ)
+            // Handle the error (e.g., log the error, display an error message, etc.)
             dd($e->getMessage());
         }
     }
 
     /**
-     * تنسيق رقم الهاتف وفقًا للقواعد المحددة.
+     * تنسيق رقم العضوية وفقًا للقواعد المحددة.
      *
-     * @param  string  $phoneNumber
-     * @return string
+     * @param  string  $regNum
+     * @return int|null
      */
     private function getMemberIdByRegNum($regNum)
     {

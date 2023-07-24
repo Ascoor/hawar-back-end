@@ -40,6 +40,7 @@ Route::get('/members', [MemberController::class, 'index']);
 // Define routes for fetching members
 Route::get('/member-category', [MemberController::class, 'getCategoryMembers']);
 
+Route::get('/members/search/{term}', [MemberController::class, 'getMemberBySearch']);
 
 
 //
