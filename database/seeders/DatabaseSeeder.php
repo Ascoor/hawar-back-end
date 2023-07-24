@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             CategoriesTableSeeder::class,
             SubCategoryTableSeeder::class,
             OldMembersSeeder::class,
-            // CsvInsertSeeder::class,
+            CsvInsertSeeder::class,
 
         ]);
     }
