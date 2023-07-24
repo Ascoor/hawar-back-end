@@ -35,7 +35,7 @@ class MemberController extends Controller
 
             return response()->json($parnetMembers);
         }
-        public function getMembersBySearch(Request $request)
+        public function   getMemberBySearch(Request $request)
         {
             $searchTerm = $request->input('searchTerm');
     
