@@ -31,7 +31,7 @@ class CsvInsertSeeder extends Seeder
     private function getMemberIdByRegNum($regNum)
     {
         $member = Member::where('RegNum', $regNum)->first();
-        return $member ? $member->MemberId : null;
+        return $member ? $member->id : null;
     }
     public function run()
     {
