@@ -10,7 +10,7 @@ class CreateMemberFeesTable extends Migration
         Schema::create('member_fees', function (Blueprint $table) {
 
             $table->id();
-            $table->integer('Member_ID')->nullable();
+            $table->integer('MemberId')->nullable();
             $table->string('FeeId')->nullable();
             $table->string('Name')->nullable();
             $table->string('RegNum')->nullable();
