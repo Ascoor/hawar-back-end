@@ -68,7 +68,7 @@ class CsvInsertSeeder extends Seeder
                 $rowData = [
                     'Member_ID' => $this->getMemberIdByRegNum($data[2]),
                     'Name' => $data[1],
-                    'FeeId' => $data[10],
+                    'FeeId' => $data[7],
                     'RegNum' => $data[2],
                     'FeeYear' => $data[8],
                     'FeeAmount' => $data[9],
