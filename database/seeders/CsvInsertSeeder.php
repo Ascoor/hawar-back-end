@@ -11,7 +11,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CsvInsertSeeder extends Seeder
 
-{private function getMemberIdAndRegNumByName($name)
+{
+    private function getMemberIdAndRegNumByName($name)
     {
         $member = Member::where('Name', $name)->first();
     
@@ -40,6 +41,7 @@ class CsvInsertSeeder extends Seeder
   }
     public function run()
     {
+        exec('chcp 65001');
         $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
         DB::beginTransaction();
 
@@ -58,7 +60,7 @@ class CsvInsertSeeder extends Seeder
                     continue;
                 }
 
-                $output->writeln("جاري معالجة الصف: $counter");
+                $output->writeln("File under check: $counter");
 
                 $existingMemberFee = $this->getMemberFeeByFeeId($data[7]);
 
