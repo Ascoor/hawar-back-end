@@ -12,20 +12,19 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class CsvInsertSeeder extends Seeder
 
 {
-
-
-    // Add this new function to get the MemberId from the members table using RegNum
-    private function getMemberIdByRegNum($regNum)
+    private function getMemberIdAndRegNumByName($name)
     {
-        $member = Member::where('RegNum', $regNum)->first();
+        $member = Member::where('Name', $name)->first();
 
         if ($member) {
             $memberId = $member->id;
-            return $memberId;
+            $regNum = $member->RegNum;
+            return ['MemberId' => $memberId, 'RegNum' => $regNum];
         }
 
         return null;
     }
+
     private function getMemberFeeByFeeId($feeId)
   {
       return MemberFee::where('FeeId', $feeId)->first();
@@ -77,7 +76,7 @@ class CsvInsertSeeder extends Seeder
                     'FeeDate' => $data[10],
                     'FeeRecieptNumber' => $data[11],
                     'FeeStatus' => $data[12],
-                    'MemberId' => $this->getMemberIdByRegNum($data[0])
+                    'MemberId' => $this->getMemberIdAndRegNumByName($data[1])
                 ];
 
 
