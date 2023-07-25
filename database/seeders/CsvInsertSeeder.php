@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Imports\MemberFeesImport;
 use App\Models\Member;
 use App\Models\MemberFee;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CsvInsertSeeder extends Seeder
@@ -39,69 +41,80 @@ class CsvInsertSeeder extends Seeder
 
     public function run()
     {
-        $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
         DB::beginTransaction();
 
         $output = new ConsoleOutput();
         $chunkSize = 1000;
         $batchSize = 50000;
-        $lastProcessedRow = $this->getLastProcessedRow() + 1;
-        $counter = 0;
 
         try {
-            while (($data = fgetcsv($csvFile)) !== false) {
-                $counter++;
+            $import = new MemberFeesImport();
+            $filePath = public_path('data/member_fees.csv');
 
-                if ($counter < $lastProcessedRow) {
-                    continue;
-                }
+            // Get the last processed row from the database
+            $lastProcessedRow = $import->getLastProcessedRow();
+            $import->storeLastProcessedRow($lastProcessedRow);
 
-                $output->writeln("جاري معالجة الصف: $counter");
+            // Import the data from the CSV file
+            Excel::import($import, $filePath);
 
-                $existingMemberFee = $this->getMemberFeeByFeeId($data[10]);
+            // Get the current row number and total row count
+            $currentRow = $import->getCurrentRow();
+            $rowCount = $import->getRowCount();
+
+            while ($currentRow < $rowCount) {
+                $rowData = $import->getRowData();
+
+                // Add your logic for processing each row here
+
+                // Example:
+                $existingMemberFee = $this->getMemberFeeByFeeId($rowData[10]);
 
                 if ($existingMemberFee) {
-                    $output->writeln("الصف رقم $counter برقم الرسم $data[10] موجود بالفعل. تم تخطيه.");
                     continue;
                 }
 
-                $rowData = [
-                    'Member_ID' => $this->getMemberIdByRegNum($data[2]),
-                    'Name' => $data[1],
-                    'FeeId' => $data[7],
-                    'RegNum' => $data[2],
-                    'FeeYear' => $data[8],
-                    'FeeAmount' => $data[9],
-                    'FeeDate' => $data[10],
-                    'FeeRecieptNumber' => $data[11],
-                    'FeeStatus' => $data[12],
+                $memberId = $this->getMemberIdByRegNum($rowData[2]);
+
+                $data = [
+                    'Member_ID' => $memberId,
+                    'Name' => $rowData[1],
+                    'FeeId' => $rowData[7],
+                    'RegNum' => $rowData[2],
+                    'FeeYear' => $rowData[8],
+                    'FeeAmount' => $rowData[9],
+                    'FeeDate' => $rowData[10],
+                    'FeeRecieptNumber' => $rowData[11],
+                    'FeeStatus' => $rowData[12],
                 ];
 
-                $memberFee = new MemberFee($rowData);
+                // Save the data to the database
+                $memberFee = new MemberFee($data);
                 $memberFee->timestamps = false;
                 $memberFee->save();
 
-                if ($counter % $batchSize === 0) {
+                if ($currentRow % $batchSize === 0) {
                     DB::commit();
                     sleep(5);
                     DB::beginTransaction();
-                    $this->storeLastProcessedRow($counter);
+                    $import->storeLastProcessedRow($currentRow);
                 }
 
-                if ($counter % $chunkSize === 0) {
+                if ($currentRow % $chunkSize === 0) {
                     DB::commit();
                     DB::beginTransaction();
-                    $this->storeLastProcessedRow($counter);
+                    $import->storeLastProcessedRow($currentRow);
                 }
+
+                $import->nextRow();
+                $currentRow++;
             }
 
             DB::commit();
-            fclose($csvFile);
-            $this->storeLastProcessedRow($counter);
+            $import->storeLastProcessedRow($currentRow);
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            fclose($csvFile);
             dd($e->getMessage());
         }
     }
