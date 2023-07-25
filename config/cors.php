@@ -18,7 +18,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://hawar.ask-ar.com','http://hawar.ask-ar.com', 'http://localhost:3000', 'http://127.0.0.1:3000'],
+    'allowed_origins' => ['https://el-hawar.club','http://el-hawar.club', 'http://localhost:3000', 'http://127.0.0.1:3000'],
 
 
     'allowed_origins_patterns' => [],
