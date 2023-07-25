@@ -12,27 +12,33 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class CsvInsertSeeder extends Seeder
 
 {
-    private function getLastProcessedRow()
-    {
-        return DB::table('last_processed_row')->value('row_number') ?? 0;
-    }
 
-
-    private function storeLastProcessedRow($rowNumber)
-    {
-        DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber, 'updated_at' => Carbon::now()]);
-    }
-      private function getMemberFeeByFeeId($feeId)
-    {
-        return MemberFee::where('FeeId', $feeId)->first();
-    }
 
     // Add this new function to get the MemberId from the members table using RegNum
     private function getMemberIdByRegNum($regNum)
     {
         $member = Member::where('RegNum', $regNum)->first();
-        return $member ? $member->id : null;
+
+        if ($member) {
+            $memberId = $member->id;
+            return $memberId;
+        }
+
+        return null;
     }
+    private function getMemberFeeByFeeId($feeId)
+  {
+      return MemberFee::where('FeeId', $feeId)->first();
+  }
+
+  private function getLastProcessedRow()
+  {
+      return DB::table('last_processed_row')->value('row_number') ?? 0;
+  }
+  private function storeLastProcessedRow($rowNumber)
+  {
+      DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber, 'updated_at' => Carbon::now()]);
+  }
     public function run()
     {
         $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
@@ -71,12 +77,9 @@ class CsvInsertSeeder extends Seeder
                     'FeeDate' => $data[10],
                     'FeeRecieptNumber' => $data[11],
                     'FeeStatus' => $data[12],
+                    'MemberId' => $this->getMemberIdByRegNum($data[1])
                 ];
 
-                // Check if 'data0' exists, and if it does, use it to set 'MemberId'
-                if (isset($data[0])) {
-                    $rowData['MemberId'] = $this->getMemberIdByRegNum($data[1]);
-                }
 
                 $memberFee = new MemberFee($rowData);
                 $memberFee->timestamps = false;
@@ -110,4 +113,8 @@ class CsvInsertSeeder extends Seeder
             dd($e->getMessage());
         }
     }
+
+
+
+
 }
