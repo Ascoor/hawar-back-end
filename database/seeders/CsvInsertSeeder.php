@@ -27,11 +27,11 @@ class CsvInsertSeeder extends Seeder
         return MemberFee::where('FeeId', $feeId)->first();
     }
 
-    // Add this new function to get the Member_Id from the members table using RegNum
+    // Add this new function to get the MemberId from the members table using RegNum
     private function getMemberIdByRegNum($regNum)
     {
         $member = Member::where('RegNum', $regNum)->first();
-        return $member ? $member->Member_Id : null;
+        return $member ? $member->MemberId : null;
     }
     public function run()
     {
@@ -73,9 +73,9 @@ class CsvInsertSeeder extends Seeder
                     'FeeStatus' => $data[12],
                 ];
 
-                // Check if 'data0' exists, and if it does, use it to set 'Member_Id'
+                // Check if 'data0' exists, and if it does, use it to set 'MemberId'
                 if (isset($data[0])) {
-                    $rowData['Member_Id'] = $this->getMemberIdByRegNum($data[1]);
+                    $rowData['MemberId'] = $this->getMemberIdByRegNum($data[1]);
                 }
 
                 $memberFee = new MemberFee($rowData);
