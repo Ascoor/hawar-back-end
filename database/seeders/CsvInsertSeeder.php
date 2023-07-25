@@ -11,143 +11,98 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CsvInsertSeeder extends Seeder
 {
- private function getLastProcessedRowTime()
+    private function getMemberFeeByFeeId($feeId)
     {
-        // Replace the following line with your logic to retrieve the last processed row time
-        // from the database, for example, if you store the last processed row time in a table named `last_processed_row`:
+        return MemberFee::where('FeeId', $feeId)->first();
+    }
+
+    private function getLastProcessedRowTime()
+    {
         return Carbon::parse(DB::table('last_processed_row')->value('updated_at'));
     }
 
     private function storeLastProcessedRow($rowNumber)
     {
-        // Replace the following line with your logic to store the last processed row number and time
-        // in the database, for example, if you store the last row number and time in a table named `last_processed_row`:
         DB::table('last_processed_row')->updateOrInsert(['id' => 1], ['row_number' => $rowNumber, 'updated_at' => Carbon::now()]);
     }
 
-
-    /**
-     * تنسيق رقم العضوية وفقًا للقواعد المحددة.
-     *
-     * @param  string  $regNum
-     * @return int|null
-     */
     private function getMemberIdByRegNum($regNum)
     {
         $member = Member::where('RegNum', $regNum)->first();
         return $member ? $member->id : null;
     }
 
-    /**
-     * Get the last processed row number from the database.
-     *
-     * @return int
-     */
     private function getLastProcessedRow()
     {
-        // Replace the following line with your logic to retrieve the last processed row number
-        // from the database, for example, if you store the last row number in a table named `last_processed_row`:
-        return DB::table('last_processed_row')->value('row_number');
-        // For now, we'll return 0 as a placeholder.
-        return 0;
+        return DB::table('last_processed_row')->value('row_number') ?? 0;
     }
 
+    public function run()
+    {
+        $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
+        DB::beginTransaction();
 
-
-    /**
-     * تنفيذ بذر البيانات في قاعدة البيانات.
-     *
-     * @return void
-     */
-
-public function run()
-{
-    // فتح ملف CSV للقراءة
-    $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
-
-    // بدء التحويل في قاعدة البيانات
-    DB::beginTransaction();
-
-    // تهيئة Symfony ConsoleOutput
-    $output = new ConsoleOutput();
-
-    try {
-        // تحديد عدد الصفوف لمعالجتها في كل دفعة
+        $output = new ConsoleOutput();
         $chunkSize = 1000;
         $batchSize = 50000;
-        $lastProcessedRow = $this->getLastProcessedRow() + 1; // Get the last processed row number from the database
+        $lastProcessedRow = $this->getLastProcessedRow() + 1;
         $counter = 0;
 
-        while (($data = fgetcsv($csvFile)) !== false) {
-            $counter++;
+        try {
+            while (($data = fgetcsv($csvFile)) !== false) {
+                $counter++;
 
-            // Skip rows until the starting row number is reached
-            if ($counter < $lastProcessedRow) {
-                continue;
+                if ($counter < $lastProcessedRow) {
+                    continue;
+                }
+
+                $output->writeln("جاري معالجة الصف: $counter");
+
+                $existingMemberFee = $this->getMemberFeeByFeeId($data[10]);
+
+                if ($existingMemberFee) {
+                    $output->writeln("الصف رقم $counter برقم الرسم $data[10] موجود بالفعل. تم تخطيه.");
+                    continue;
+                }
+
+                $rowData = [
+                    'Member_ID' => $this->getMemberIdByRegNum($data[2]),
+                    'Name' => $data[1],
+                    'FeeId' => $data[10],
+                    'RegNum' => $data[2],
+                    'FeeYear' => $data[8],
+                    'FeeAmount' => $data[9],
+                    'FeeDate' => $data[10],
+                    'FeeRecieptNumber' => $data[11],
+                    'FeeStatus' => $data[12],
+                ];
+
+                $memberFee = new MemberFee($rowData);
+                $memberFee->timestamps = false;
+                $memberFee->save();
+
+                if ($counter % $batchSize === 0) {
+                    DB::commit();
+                    sleep(5);
+                    DB::beginTransaction();
+                    $this->storeLastProcessedRow($counter);
+                }
+
+                if ($counter % $chunkSize === 0) {
+                    DB::commit();
+                    DB::beginTransaction();
+                    $this->storeLastProcessedRow($counter);
+                }
             }
 
-            // Display the current row being processed
-            $output->writeln("جاري معالجة الصف: $counter");
+            DB::commit();
+            fclose($csvFile);
+            $this->storeLastProcessedRow($counter);
 
-            // Map CSV data to table columns
-            $rowData = [
-                'Member_ID' => $this->getMemberIdByRegNum($data[2]),
-                'Name' => $data[1],
-                'RegNum' => $data[2],
-                'FeeYear' => $data[8],
-                'FeeAmount' => $data[9],
-                'FeeDate' => $data[10],
-                'FeeRecieptNumber' => $data[11],
-                'FeeStatus' => $data[12],
-            ];
-
-            // Create a new model instance
-            $memberFee = new MemberFee($rowData);
-            $memberFee->timestamps = false;
-
-            // Save the model
-            $memberFee->save();
-
-            // Check if the batch size is reached and pause for 5 seconds before continuing
-            if ($counter % $batchSize === 0) {
-                DB::commit();
-                sleep(5); // Pause for 5 seconds
-                DB::beginTransaction();
-
-                // Store the last processed row number after processing the batch
-                $this->storeLastProcessedRow($counter);
-            }
-
-            // Commit the transaction every time the chunk size is reached
-            if ($counter % $chunkSize === 0) {
-                DB::commit();
-                DB::beginTransaction();
-
-                // Store the last processed row number after processing the chunk
-                $this->storeLastProcessedRow($counter);
-            }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            fclose($csvFile);
+            dd($e->getMessage());
         }
-
-        // Commit any remaining changes in the database
-        DB::commit();
-
-        // Close the CSV file
-        fclose($csvFile);
-
-        // Store the last processed row number (end of the CSV file)
-        $this->storeLastProcessedRow($counter);
-
-    } catch (\Throwable $e) {
-        // Rollback the transaction if an error occurs
-        DB::rollBack();
-
-        // Close the CSV file
-        fclose($csvFile);
-
-        // Handle the error (e.g., log the error, display an error message, etc.)
-        dd($e->getMessage());
     }
 }
-}
-
-
