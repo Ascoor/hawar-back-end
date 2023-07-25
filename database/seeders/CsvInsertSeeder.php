@@ -41,7 +41,6 @@ class CsvInsertSeeder extends Seeder
   }
     public function run()
     {
-        exec('chcp 65001');
         $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
         DB::beginTransaction();
 
