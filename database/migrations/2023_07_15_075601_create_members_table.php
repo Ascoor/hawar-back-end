@@ -10,35 +10,31 @@ class CreateMembersTable extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->string('RegNum')->nullable();
             $table->string('Name')->nullable();
+            $table->string('MemberId')->nullable();
+            $table->string('DatOfBirth')->nullable();
+            $table->string('Age')->nullable();
+            $table->string('NationalId')->nullable();
+            $table->string('RelationId')->nullable();
             $table->string('FamilyId')->nullable();
-            $table->string('Category')->nullable();
+            $table->string('CategoryId')->nullable();
             $table->string('JobCategory')->nullable();
-            $table->string('Relation')->nullable();
+            $table->string('Address')->nullable();
             $table->string('City')->nullable();
             $table->string('State')->nullable();
             $table->string('Gender')->nullable();
             $table->string('Relegion')->nullable();
-            $table->string('Address')->nullable();
             $table->string('Profession')->nullable();
-            $table->string('Status')->nullable();
-            $table->string('ExcludedCategories')->nullable();
+            $table->string('StatusId')->nullable();
+            $table->string('ExcludedCategorieId')->nullable();
             $table->string('Email')->nullable();
             $table->string('Phone')->nullable();
             $table->string('Photo')->nullable();
-            $table->string('Receiver')->nullable();
-            $table->date('CreatedAt')->nullable();
+            $table->string('CreatedAt')->nullable();
             $table->string('AppDecision')->nullable();
-            $table->string('Number')->nullable();
-            $table->string('NationalId')->nullable();
-            $table->string('Bod')->nullable();
-            $table->integer('Age')->nullable();
-            $table->integer('CountryId')->nullable();
+            $table->string('CountryId')->nullable();
             $table->string('RenewalStatus')->nullable();
             $table->string('PostalCode')->nullable();
-            $table->string('Facebook')->nullable();
-            $table->string('Twitter')->nullable();
             $table->string('DateOfSubscription')->nullable();
             $table->string('HomePhone')->nullable();
             $table->string('WorkPhone')->nullable();
@@ -46,10 +42,14 @@ class CreateMembersTable extends Migration
             $table->string('MemberCardName')->nullable();
             $table->string('MemberGraduationDescription')->nullable();
             $table->string('Remarks')->nullable();
-            $table->string('Note1')->nullable();
-            $table->string('Note2')->nullable();
-            $table->string('Note3')->nullable();
-            $table->string('Note4')->nullable();
+            $table->string('MemIsMainMember')->nullable();
+            $table->string('MainMember_ID')->nullable();
+            $table->string('BoardDecision_Date')->nullable();
+            $table->string('BoardDecisionNumber')->nullable();
+            $table->string('player')->nullable();
+            $table->string('TeamId')->nullable();
+            $table->json('notes')->nullable(); // New JSON column to store notes
+            				
             $table->timestamps();
         });
     }
