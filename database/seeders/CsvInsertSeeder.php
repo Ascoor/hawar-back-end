@@ -75,12 +75,6 @@ while (($data = fgetcsv($csvFile)) !== false) {
         'fee_status' => $data[12],
     ];
 
-                 // Get the 'MemberId' using the updated function getMemberIdByName
-    $memberId = $this->getMemberIdByName($data[1]);
-    if ($memberId) {
-        $rowData['MemberId'] = $memberId;
-    }
-
     $memberFee = new MemberFee($rowData);
     $memberFee->timestamps = false;
     $memberFee->save();
