@@ -160,104 +160,108 @@ class OldMembersSeeder extends Seeder
                 $member->timestamps = false;
                 $member->save();
 
+
+
+                // This if use Category Table and subCategory
+
 // Initialize $subCategoryId as null
-$subCategoryId = null;
+// $subCategoryId = null;
 
-if ($data[13] === '1') {
-    $subCategoryId = 36;
-} elseif ($data[13] === '2') {
-    $subCategoryId = 37;
-}
+// if ($data[13] === '1') {
+//     $subCategoryId = 36;
+// } elseif ($data[13] === '2') {
+//     $subCategoryId = 37;
+// }
 
-// Insert data into the member_category table based on the religion
-if ($subCategoryId !== null) {
-    $memberCategoryData = [
-        'member_id' => $member->id,
-        'category_id' => 6, // Assuming this is the category_id for the religion category
-        'sub_category_id' => $subCategoryId,
-    ];
+// // Insert data into the member_category table based on the religion
+// if ($subCategoryId !== null) {
+//     $memberCategoryData = [
+//         'member_id' => $member->id,
+//         'category_id' => 6, // Assuming this is the category_id for the religion category
+//         'sub_category_id' => $subCategoryId,
+//     ];
 
-    DB::table('member_category')->insert($memberCategoryData);
-}
+//     DB::table('member_category')->insert($memberCategoryData);
+// }
 
-// Reset $subCategoryId to null for the next category
-$subCategoryId = null;
+// // Reset $subCategoryId to null for the next category
+// $subCategoryId = null;
 
-if ($data[5] === '1') {
-    $subCategoryId = 34;
-} elseif ($data[5] === '2') {
-    $subCategoryId = 35;
-}
+// if ($data[5] === '1') {
+//     $subCategoryId = 34;
+// } elseif ($data[5] === '2') {
+//     $subCategoryId = 35;
+// }
 
-// Insert data into the member_category table based on the religion
-if ($subCategoryId !== null) {
-    $memberCategoryData = [
-        'member_id' => $member->id,
-        'category_id' => 5, // Assuming this is the category_id for the religion category
-        'sub_category_id' => $subCategoryId,
-    ];
+// // Insert data into the member_category table based on the religion
+// if ($subCategoryId !== null) {
+//     $memberCategoryData = [
+//         'member_id' => $member->id,
+//         'category_id' => 5, // Assuming this is the category_id for the religion category
+//         'sub_category_id' => $subCategoryId,
+//     ];
 
-    DB::table('member_category')->insert($memberCategoryData);
-}
-// Reset $subCategoryId to null for the next category
-$subCategoryId = null;
+//     DB::table('member_category')->insert($memberCategoryData);
+// }
+// // Reset $subCategoryId to null for the next category
+// $subCategoryId = null;
 
-if ($data[27] === '1') {
-    $subCategoryId = 17;
-} elseif ($data[27] === '2') {
-    $subCategoryId = 18;
-}
- elseif ($data[27] === '6') {
-    $subCategoryId = 22;
-}
+// if ($data[27] === '1') {
+//     $subCategoryId = 17;
+// } elseif ($data[27] === '2') {
+//     $subCategoryId = 18;
+// }
+//  elseif ($data[27] === '6') {
+//     $subCategoryId = 22;
+// }
 
-// Insert data into the member_category table based on the religion
-if ($subCategoryId !== null) {
-    $memberCategoryData = [
-        'member_id' => $member->id,
-        'category_id' => 3, // Assuming this is the category_id for the religion category
-        'sub_category_id' => $subCategoryId,
-    ];
+// // Insert data into the member_category table based on the religion
+// if ($subCategoryId !== null) {
+//     $memberCategoryData = [
+//         'member_id' => $member->id,
+//         'category_id' => 3, // Assuming this is the category_id for the religion category
+//         'sub_category_id' => $subCategoryId,
+//     ];
 
-    DB::table('member_category')->insert($memberCategoryData);
-}
+//     DB::table('member_category')->insert($memberCategoryData);
+// }
 
 
-                // Map subcategory names to their corresponding IDs
-$subCategoryMap = [
-    '1' => 1,
-    '2' => 2,
-    '3' => 3,
-    '4' => 4,
-    '5' => 5,
-    'عضو رياضى' => 6,
-    'تصريح' => 7,
-];
+//                 // Map subcategory names to their corresponding IDs
+// $subCategoryMap = [
+//     '1' => 1,
+//     '2' => 2,
+//     '3' => 3,
+//     '4' => 4,
+//     '5' => 5,
+//     'عضو رياضى' => 6,
+//     'تصريح' => 7,
+// ];
 
-// Assuming that $data[11] contains the subcategory name, you can use the following code to check if it exists in the subCategoryMap
-$subCategoryName = $data[7];
+// // Assuming that $data[11] contains the subcategory name, you can use the following code to check if it exists in the subCategoryMap
+// $subCategoryName = $data[7];
 
-// Check if the subcategory exists in the subCategoryMap
-if (array_key_exists($subCategoryName, $subCategoryMap)) {
-    // If the subcategory exists in the subCategoryMap, use the corresponding sub_category_id
-    $subCategoryId = $subCategoryMap[$subCategoryName];
+// // Check if the subcategory exists in the subCategoryMap
+// if (array_key_exists($subCategoryName, $subCategoryMap)) {
+//     // If the subcategory exists in the subCategoryMap, use the corresponding sub_category_id
+//     $subCategoryId = $subCategoryMap[$subCategoryName];
 
-    // Check if the combination of member_id and sub_category_id already exists in the member_category table
-    $existingData = DB::table('member_category')
-        ->where('member_id', $member->id)
-        ->where('sub_category_id', $subCategoryId)
-        ->first();
+//     // Check if the combination of member_id and sub_category_id already exists in the member_category table
+//     $existingData = DB::table('member_category')
+//         ->where('member_id', $member->id)
+//         ->where('sub_category_id', $subCategoryId)
+//         ->first();
 
-    if (!$existingData) {
-        // If the combination does not exist, insert the data into the member_category table
-        $memberCategoryData = [
-            'member_id' => $member->id,
-            'category_id' => 1, // Set category_id to 1 as it's the default value for all
-            'sub_category_id' => $subCategoryId,
-        ];
-        DB::table('member_category')->insert($memberCategoryData);
-    }
-}
+//     if (!$existingData) {
+//         // If the combination does not exist, insert the data into the member_category table
+//         $memberCategoryData = [
+//             'member_id' => $member->id,
+//             'category_id' => 1, // Set category_id to 1 as it's the default value for all
+//             'sub_category_id' => $subCategoryId,
+//         ];
+//         DB::table('member_category')->insert($memberCategoryData);
+//     }
+// }
 
                 // تنفيذ عملية المعاملة كل مجموعة من الصفوف
                 if ($counter % $chunkSize === 0) {

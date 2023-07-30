@@ -12,19 +12,18 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class CsvInsertSeeder extends Seeder
 
 {
-    private function getMemberIdAndRegNumByName($name)
-    {
-        $member = Member::where('Name', $name)->first();
-    
-        if ($member) {
-            $memberId = $member->id;
-            $regNum = $member->RegNum;
-            return ['MemberId' => $memberId, 'RegNum' => $regNum];
-        }
-    
-        return null; // Return null or handle the case when member data is not found.
+    private function getMemberIdByName($name)
+{
+    $member = Member::where('name', $name)->first();
+
+    if ($member) {
+        $memberId = $member->id; // Use the 'id' column as 'member_id' is now the primary key in the members table
+        return $memberId;
     }
-    
+
+    return null; // Return null or handle the case when member data is not found.
+}
+
 
     private function getMemberFeeByFeeId($feeId)
   {
@@ -52,51 +51,40 @@ class CsvInsertSeeder extends Seeder
         $rowsInserted = 0; // Initialize the counter for rows inserted
 
         try {
-            while (($data = fgetcsv($csvFile)) !== false) {
-                $counter++;
 
-                if ($counter < $lastProcessedRow) {
-                    continue;
-                }
+while (($data = fgetcsv($csvFile)) !== false) {
+    $counter++;
 
-                $output->writeln("File under check: $counter");
+    if ($counter < $lastProcessedRow) {
+        continue;
+    }
 
-                $existingMemberFee = $this->getMemberFeeByFeeId($data[7]);
+    $output->writeln("File under check: $counter");
 
-                if ($existingMemberFee) {
-                    $output->writeln("الصف رقم $counter برقم الرسم $data[7] موجود بالفعل. تم تخطيه.");
-                    continue;
-                }
+    // ... (existing code)
 
-                $rowData = [
-                    'Name' => $data[1],
-                    'FeeId' => $data[7],
-                    'RegNum' => $data[0],
-                    'FeeYear' => $data[8],
-                    'FeeAmount' => $data[9],
-                    'FeeDate' => $data[10],
-                    'FeeRecieptNumber' => $data[11],
-                    'FeeStatus' => $data[12],
-                ];
-                
-                // Get the 'MemberId' and 'RegNum' from the result of getMemberIdAndRegNumByName
-                $memberData = $this->getMemberIdAndRegNumByName($data[1]);
-                if ($memberData) {
-                    $rowData['MemberId'] = $memberData['MemberId'];
-                    $rowData['RegNum'] = $memberData['RegNum'];
-                }
-                $memberFee = new MemberFee($rowData);
-                $memberFee->timestamps = false;
-                $memberFee->save();
+    $rowData = [
 
-                $rowsInserted++; // Increment the rows inserted counter
+        'member_id' => $this->getMemberIdByName($data[1]),
+        'name' => $data[1],
+        'fee_id' => $data[7],
+        'fee_year' => $data[8],
+        'fee_amount' => $data[9],
+        'fee_date' => $data[10],
+        'fee_recieptNumber' => $data[11],
+        'fee_status' => $data[12],
+    ];
 
-                if ($counter % $batchSize === 0) {
-                    DB::commit();
-                    sleep(7); // Sleep for 7 seconds
-                    DB::beginTransaction();
-                    $this->storeLastProcessedRow($counter);
-                }
+                 // Get the 'MemberId' using the updated function getMemberIdByName
+    $memberId = $this->getMemberIdByName($data[1]);
+    if ($memberId) {
+        $rowData['MemberId'] = $memberId;
+    }
+
+    $memberFee = new MemberFee($rowData);
+    $memberFee->timestamps = false;
+    $memberFee->save();
+
 
                 if ($counter % $chunkSize === 0) {
                     DB::commit();
