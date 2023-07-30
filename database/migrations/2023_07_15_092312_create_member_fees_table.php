@@ -10,15 +10,14 @@ class CreateMemberFeesTable extends Migration
         Schema::create('member_fees', function (Blueprint $table) {
 
             $table->id();
-            $table->integer('MemberId')->nullable();
-            $table->string('FeeId')->nullable();
-            $table->string('Name')->nullable();
-            $table->string('RegNum')->nullable();
-            $table->string('FeeYear')->nullable();
-            $table->string('FeeAmount', 8, 2)->nullable();
-            $table->string('FeeDate')->nullable();
-            $table->string('FeeRecieptNumber')->nullable();
-            $table->string('FeeStatus')->nullable();
+            $table->integer('member_id')->nullable();
+            $table->string('fee_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('fee_year')->nullable();
+            $table->string('fee_amount', 8, 2)->nullable();
+            $table->string('fee_date')->nullable();
+            $table->string('fee_recieptNumber')->nullable();
+            $table->string('fee_status')->nullable();
             $table->timestamps();
 
         });
