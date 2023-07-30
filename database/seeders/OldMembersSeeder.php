@@ -171,7 +171,7 @@ class OldMembersSeeder extends Seeder
           if ($subCategoryId !== null) {
               $memberCategoryData = [
                   'member_id' => $member->id,
-                  'category_id' => 5, // Assuming this is the category_id for the religion category
+                  'category_id' => 6, // Assuming this is the category_id for the religion category
                   'sub_category_id' => $subCategoryId,
               ];
 
@@ -187,7 +187,7 @@ class OldMembersSeeder extends Seeder
           if ($subCategoryId !== null) {
               $memberCategoryData = [
                   'member_id' => $member->id,
-                  'category_id' => 6, // Assuming this is the category_id for the religion category
+                  'category_id' => 5, // Assuming this is the category_id for the religion category
                   'sub_category_id' => $subCategoryId,
               ];
 
