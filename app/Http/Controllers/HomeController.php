@@ -31,11 +31,11 @@ class HomeController extends Controller
     $currentYear = now()->year;
 
     // Get the count of members who paid the fee in the current year
-    $membersPaidCurrentYear = Member::whereYear('last_payed_fiscal_year', $currentYear)->count();
+    $membersPaidCurrentYear = Member::whereYear('last_payed_fiscal_year','like','%', $currentYear)->count();
 
     // Get the count of members who paid the fee in the previous year
     $previousYear = $currentYear - 1;
-    $membersPaidPreviousYear = Member::whereYear('last_payed_fiscal_year', $previousYear)->count();
+    $membersPaidPreviousYear = Member::whereYear('last_payed_fiscal_year','like','%', $previousYear)->count();
 
     return response()->json([
         'workMemberCount' => $workMemberCount,
