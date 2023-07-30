@@ -10,19 +10,19 @@ class HomeController extends Controller
 
     public function getMemberCounts()
 {
-    $memberWork = 'عضو عامل';
-    $memberPart = 'عضو تابع';
-    $memberMale = 'ذكر';
-    $memberFemale = 'أنثى';
+    $memberWork = '1';
+    $memberPart = '2';
+    $memberMale = '1';
+    $memberFemale = '2';
     $membersIgnored = 'مسقطة';
     $ageOver25 = 25;
     $ageOver60 = 60;
 
     $workMemberCount = Member::where('category', $memberWork)->count();
     $partMemberCount = Member::where('category', $memberPart)->count();
-    $maleCount = Member::where('Gender', $memberMale)->count();
-    $femaleCount = Member::where('Gender', $memberFemale)->count();
-    $membersIgnoredCount = Member::where('Status', 'like', '%' . $membersIgnored . '%')->count(); // Modify the query condition here
+    $maleCount = Member::where('gender', $memberMale)->count();
+    $femaleCount = Member::where('gender', $memberFemale)->count();
+    $membersIgnoredCount = Member::where('status', 'like', '%' . $membersIgnored . '%')->count(); // Modify the query condition here
     $countOver25 = Member::where('age', '>', $ageOver25)->count();
     $countOver60 = Member::where('age', '>', $ageOver60)->count();
 
