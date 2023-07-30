@@ -18,11 +18,11 @@ class HomeController extends Controller
     $ageOver25 = 25;
     $ageOver60 = 60;
 
-    $workMemberCount = Member::where('category', $memberWork)->count();
-    $partMemberCount = Member::where('category', $memberPart)->count();
+    $workMemberCount = Member::where('category_id', $memberWork)->count();
+    $partMemberCount = Member::where('category_id', $memberPart)->count();
     $maleCount = Member::where('gender', $memberMale)->count();
     $femaleCount = Member::where('gender', $memberFemale)->count();
-    $membersIgnoredCount = Member::where('status', 'like', '%' . $membersIgnored . '%')->count(); // Modify the query condition here
+    $membersIgnoredCount = Member::where('status_id', 'like', '%' . $membersIgnored . '%')->count(); // Modify the query condition here
     $countOver25 = Member::where('age', '>', $ageOver25)->count();
     $countOver60 = Member::where('age', '>', $ageOver60)->count();
 
