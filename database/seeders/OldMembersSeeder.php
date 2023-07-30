@@ -17,55 +17,55 @@ class OldMembersSeeder extends Seeder
      * @param string $phoneNumber الرقم الذي يجب تنسيقه.
      * @return string الرقم المنسق بالطريقة المطلوبة.
      */
-    // function formatPhoneNumber($phoneNumber)
-    // {
-    //     // إزالة أي حروف غير رقمية من الرقم
-    //     $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+    function formatPhoneNumber($phoneNumber)
+    {
+        // إزالة أي حروف غير رقمية من الرقم
+        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
 
-    //     // التحقق من طول الرقم
-    //     if (strlen($phoneNumber) === 11) {
-    //         // التحقق مما إذا كان الرقم يبدأ بـ 011، 012، 010، أو 015
-    //         if (preg_match('/^(011|012|010|015)/', $phoneNumber)) {
-    //             return $phoneNumber;
-    //         } elseif (substr($phoneNumber, 0, 3) === '018') {
-    //             // تغيير البادئة إلى 0128
-    //             return '0128' . substr($phoneNumber, 3);
-    //         }
-    //     } elseif (strlen($phoneNumber) === 10) {
-    //         // التحقق مما إذا كان الرقم يبدأ بـ 010
-    //         if (substr($phoneNumber, 0, 3) === '010') {
-    //             return '0100' . substr($phoneNumber, 3);
-    //         } elseif (substr($phoneNumber, 0, 3) === '016') {
-    //             // تغيير البادئة إلى 0106
-    //             return '0106' . substr($phoneNumber, 3);
-    //         } elseif (substr($phoneNumber, 0, 3) === '100') {
-    //             // تغيير البادئة إلى 0100
-    //             return '0100' . substr($phoneNumber, 3);
-    //         } elseif (substr($phoneNumber, 0, 3) === '10') {
-    //             // تغيير البادئة إلى 010
-    //             return '010' . substr($phoneNumber, 3);
-    //         } elseif (substr($phoneNumber, 0, 3) === '012') {
-    //             // تغيير البادئة إلى 0122
-    //             return '0122' . substr($phoneNumber, 3);
-    //         }
-    //     } elseif (strlen($phoneNumber) === 9 && $phoneNumber[0] !== '0') {
-    //         // إضافة صفر في البداية وتطبيق القواعد مرة أخرى
-    //         return $this->formatPhoneNumber('0' . $phoneNumber);
-    //     }
-    //     // إذا لم تتطابق أي من القواعد، استعيد الرقم الأصلي
-    //     return $phoneNumber;
-    // }
+        // التحقق من طول الرقم
+        if (strlen($phoneNumber) === 11) {
+            // التحقق مما إذا كان الرقم يبدأ بـ 011، 012، 010، أو 015
+            if (preg_match('/^(011|012|010|015)/', $phoneNumber)) {
+                return $phoneNumber;
+            } elseif (substr($phoneNumber, 0, 3) === '018') {
+                // تغيير البادئة إلى 0128
+                return '0128' . substr($phoneNumber, 3);
+            }
+        } elseif (strlen($phoneNumber) === 10) {
+            // التحقق مما إذا كان الرقم يبدأ بـ 010
+            if (substr($phoneNumber, 0, 3) === '010') {
+                return '0100' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '016') {
+                // تغيير البادئة إلى 0106
+                return '0106' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '100') {
+                // تغيير البادئة إلى 0100
+                return '0100' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '10') {
+                // تغيير البادئة إلى 010
+                return '010' . substr($phoneNumber, 3);
+            } elseif (substr($phoneNumber, 0, 3) === '012') {
+                // تغيير البادئة إلى 0122
+                return '0122' . substr($phoneNumber, 3);
+            }
+        } elseif (strlen($phoneNumber) === 9 && $phoneNumber[0] !== '0') {
+            // إضافة صفر في البداية وتطبيق القواعد مرة أخرى
+            return $this->formatPhoneNumber('0' . $phoneNumber);
+        }
+        // إذا لم تتطابق أي من القواعد، استعيد الرقم الأصلي
+        return $phoneNumber;
+    }
 
-    // private function calculateAge($bod)
-    // {
-    //     // Parse the date using Carbon
-    //     $carbonDate = Carbon::parse($bod);
+    private function calculateAge($bod)
+    {
+        // Parse the date using Carbon
+        $carbonDate = Carbon::parse($bod);
 
-    //     // Calculate the age based on the birth date
-    //     $age = $carbonDate->diffInYears(Carbon::now());
+        // Calculate the age based on the birth date
+        $age = $carbonDate->diffInYears(Carbon::now());
 
-    //     return $age;
-    // }
+        return $age;
+    }
 
     private function generateEmail($regNum)
     {
@@ -98,16 +98,6 @@ class OldMembersSeeder extends Seeder
 
                 // عرض الصف الحالي الذي يتم معالجته
                 $output->writeln("جارٍ معالجة الصف: $counter");
-
-                
-                // $remarksDate = Carbon::parse($data[33]);
-                // $currentYear = Carbon::now()->year;
-                // if ($remarksDate->year > $currentYear) {
-                //     $rowData['RenewalStatus'] = 'renewed';
-                // } else {
-                //     $rowData['RenewalStatus'] = 'unrenewed';
-                // }
-         
             // Create the 'notes' array
             $notes = [
                 [
@@ -130,75 +120,83 @@ class OldMembersSeeder extends Seeder
                     'note' => $data[17], // Note4
                     'createdAt' => now()->toDateTimeString(), // Set createdAt to the current date and time
                 ],
-            ];  
+            ];
 
             $rowData = [
-                'member_id' => $data[0],
+                'member_id' => $data[3],
                 'name' => $data[1],
                 'family_id' => $data[2],
-                'date_of_birth' => $data[3],
-                'national_id' => $data[4],
+                'date_of_birth' => $data[4],
+                'national_id' => $data[5],
                 'user_id' => '1', // Set the user_id to 1 for all data
                 'gender' => $data[6],
                 'category_id' => $data[7],
                 'relation_id' => $data[8],
                 'status_id' => $data[9],
                 'phone' => $data[10],
-               
+
                 'address' => $data[11],
                 'profession' => $data[12],
                 'relegion' => $data[13],
-                'PostalCode' => '35111',
+                'postal_code' => '35111',
                 'notes' => json_encode($notes), // Convert the 'notes' array to JSON
                 'last_payed_fiscal_year'=>$data[18],
                 'date_of_the_board_of_director_Decisions'=>$data[19],
                 'decision_number'=>$data[20],
                 'memCard_MemberName'=>$data[21],
-                'mem_GraduationDesc'=>$data[22],
-                'mem_WorkPhone'=>$data[23],
-                'mem_HomePhone'=>$data[24],
-          
+                    'mem_GraduationDesc'=>$data[22],
+                    'mem_WorkPhone'=>$data[23],
+                    'mem_HomePhone'=>$data[24],
+
            'Photo'=>$data[25],
-           'excluded_categories_id'=>$data[26],
-           'date_of_subscription'=>$data[27]
-          
+           'date_of_subscription'=>$data[26],
+           'excluded_categories_id'=>$data[27]
+
             ];
                 // Insert data into the members table
                 $member = new Member($rowData);
                 $member->timestamps = false;
                 $member->save();
 
-//                 // Insert data into the member_category table based on the religion
-//                 if ($data[12] === 'مسلم') {
-//                     $categoryId = 6;
-//                     $subCategoryId = 1;
-//                 } elseif ($data[12] === 'مسيحى') {
-//                     $categoryId = 6;
-//                     $subCategoryId = 2;
-//                 } else {
-//                     // إذا كانت القيمة غير "مسلم" أو "مسيحي" يمكنك تعيين قيم افتراضية أخرى أو تجاوز القيمة في حالة عدم الحاجة إلى إضافة تصنيفات رئيسية وفرعية
-//                     $categoryId = null;
-//                     $subCategoryId = null;
-//                 }
+          // Format the phone number
+          $formattedPhoneNumber = $this->formatPhoneNumber($data[10]);
+          $rowData['phone'] = $formattedPhoneNumber;
 
-//                 // Check if there are values for the category and subcategory, then insert into member_category table
-//                 if ($categoryId !== null && $subCategoryId !== null) {
-//                     $memberCategoryData = [
-//                         'member_id' => $member->id,
-//                         'category_id' => $categoryId,
-//                         'sub_category_id' => $subCategoryId,
-//                     ];
+          // Calculate the age based on the date of birth
+          $age = $this->calculateAge($data[4]);
+          // You can use the age in your logic as needed.
 
-//                     DB::table('member_category')->insert($memberCategoryData);
-//                 }
+          // Generate email address for the member
+          $regNum = $data[3]; // Replace this with the appropriate field that holds the registration number.
+          $email = $this->generateEmail($regNum);
+          $rowData['email'] = $email;
+
+          // Determine the sub_category_id based on the religion
+          $subCategoryId = null;
+          if ($data[13] === 'مسلم') {
+              $subCategoryId = 1;
+          } elseif ($data[13] === 'مسيحى') {
+              $subCategoryId = 2;
+          }
+
+          // Insert data into the member_category table based on the religion
+          if ($subCategoryId !== null) {
+              $memberCategoryData = [
+                  'member_id' => $member->id,
+                  'category_id' => 6, // Assuming this is the category_id for the religion category
+                  'sub_category_id' => $subCategoryId,
+              ];
+
+              DB::table('member_category')->insert($memberCategoryData);
+          }
 //                 // Map gender names to their corresponding sub_category_ids
 // $genderSubCategoryMap = [
 //     'ذكر' => 1,
 //     'أنثى' => 2,
 // ];
 
-// // Assuming that $data[8] contains the gender, you can use the following code to check if it exists in the genderSubCategoryMap
-// $gender = $data[8];
+// // Assuming that $data[6] contains the gender, you can use the following code to check if it exists in the genderSubCategoryMap
+// $gender = $data[13];
 
 // // Check if the gender exists in the genderSubCategoryMap
 // if (array_key_exists($gender, $genderSubCategoryMap)) {
