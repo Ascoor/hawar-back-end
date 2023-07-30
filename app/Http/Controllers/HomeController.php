@@ -27,15 +27,18 @@ class HomeController extends Controller
     $countOver25 = Member::where('age', '>', $ageOver25)->count();
     $countOver60 = Member::where('age', '>', $ageOver60)->count();
 
-    // Get the current year
     $currentYear = now()->year;
 
-    // Get the count of members who paid the fee in the current year
-    $membersPaidCurrentYear = Member::whereYear('last_payed_fiscal_year','like','%', $currentYear)->count();
-
-    // Get the count of members who paid the fee in the previous year
+    // Calculate the previous fiscal year
     $previousYear = $currentYear - 1;
-    $membersPaidPreviousYear = Member::whereYear('last_payed_fiscal_year','like','%', $previousYear)->count();
+
+
+    // Get the count of members who paid the fee in the current fiscal year
+    $membersPaidCurrentFiscalYear = Member::where('last_payed_fiscal_year', 'like', '%' . $currentYear . '%')->count();
+
+    // Get the count of members who paid the fee in the previous fiscal year
+    $membersPaidPreviousFiscalYear = Member::where('last_payed_fiscal_year', 'like', '%' . $previousYear . '%')->count();
+
 
     return response()->json([
         'workMemberCount' => $workMemberCount,
@@ -45,8 +48,9 @@ class HomeController extends Controller
         'membersIgnored' => $membersIgnoredCount,
         'countOver25' => $countOver25,
         'countOver60' => $countOver60,
-        'membersPaidCurrentYear' => $membersPaidCurrentYear,
-        'membersPaidPreviousYear' => $membersPaidPreviousYear,
+        'membersPaidCurrentFiscalYear' => $membersPaidCurrentFiscalYear,
+        'membersPaidPreviousFiscalYear' => $membersPaidPreviousFiscalYear,
+
     ]);
 }
 
