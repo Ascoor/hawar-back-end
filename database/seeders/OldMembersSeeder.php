@@ -160,39 +160,46 @@ class OldMembersSeeder extends Seeder
                 $member->timestamps = false;
                 $member->save();
 
+// Initialize $subCategoryId as null
+$subCategoryId = null;
 
-          if ($data[13] === '1') {
-              $subCategoryId = 36;
-          } elseif ($data[13] === '2') {
-              $subCategoryId = 37;
-          }
+if ($data[13] === '1') {
+    $subCategoryId = 36;
+} elseif ($data[13] === '2') {
+    $subCategoryId = 37;
+}
 
-          // Insert data into the member_category table based on the religion
-          if ($subCategoryId !== null) {
-              $memberCategoryData = [
-                  'member_id' => $member->id,
-                  'category_id' => 6, // Assuming this is the category_id for the religion category
-                  'sub_category_id' => $subCategoryId,
-              ];
+// Insert data into the member_category table based on the religion
+if ($subCategoryId !== null) {
+    $memberCategoryData = [
+        'member_id' => $member->id,
+        'category_id' => 6, // Assuming this is the category_id for the religion category
+        'sub_category_id' => $subCategoryId,
+    ];
 
-              DB::table('member_category')->insert($memberCategoryData);
-          }
-          if ($data[5] === '1') {
-              $subCategoryId = 34;
-          } elseif ($data[5] === '2') {
-              $subCategoryId = 35;
-          }
+    DB::table('member_category')->insert($memberCategoryData);
+}
 
-          // Insert data into the member_category table based on the religion
-          if ($subCategoryId !== null) {
-              $memberCategoryData = [
-                  'member_id' => $member->id,
-                  'category_id' => 5, // Assuming this is the category_id for the religion category
-                  'sub_category_id' => $subCategoryId,
-              ];
+// Reset $subCategoryId to null for the next category
+$subCategoryId = null;
 
-              DB::table('member_category')->insert($memberCategoryData);
-          }
+if ($data[5] === '1') {
+    $subCategoryId = 34;
+} elseif ($data[5] === '2') {
+    $subCategoryId = 35;
+}
+
+// Insert data into the member_category table based on the religion
+if ($subCategoryId !== null) {
+    $memberCategoryData = [
+        'member_id' => $member->id,
+        'category_id' => 5, // Assuming this is the category_id for the religion category
+        'sub_category_id' => $subCategoryId,
+    ];
+
+    DB::table('member_category')->insert($memberCategoryData);
+}
+
 
                 // Map subcategory names to their corresponding IDs
 $subCategoryMap = [
