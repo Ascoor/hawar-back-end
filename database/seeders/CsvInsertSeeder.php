@@ -64,7 +64,6 @@ while (($data = fgetcsv($csvFile)) !== false) {
     // ... (existing code)
 
     $rowData = [
-
         'member_id' => $this->getMemberIdByName($data[1]),
         'name' => $data[1],
         'fee_id' => $data[7],
@@ -74,6 +73,7 @@ while (($data = fgetcsv($csvFile)) !== false) {
         'fee_recieptNumber' => $data[11],
         'fee_status' => $data[12],
     ];
+
 
                  // Get the 'MemberId' using the updated function getMemberIdByName
     $memberId = $this->getMemberIdByName($data[1]);
