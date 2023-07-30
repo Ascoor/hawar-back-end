@@ -17,8 +17,8 @@ class CsvInsertSeeder extends Seeder
     $member = Member::where('name', $name)->first();
 
     if ($member) {
-        $memberId = $member->id; // Use the 'id' column as 'member_id' is now the primary key in the members table
-        return $memberId;
+        $member_id = $member->id; // Use the 'id' column as 'member_id' is now the primary key in the members table
+        return $member_id;
     }
 
     return null; // Return null or handle the case when member data is not found.
@@ -64,6 +64,7 @@ while (($data = fgetcsv($csvFile)) !== false) {
     // ... (existing code)
 
     $rowData = [
+
         'member_id' => $this->getMemberIdByName($data[1]),
         'name' => $data[1],
         'fee_id' => $data[7],
@@ -73,7 +74,6 @@ while (($data = fgetcsv($csvFile)) !== false) {
         'fee_recieptNumber' => $data[11],
         'fee_status' => $data[12],
     ];
-
 
                  // Get the 'MemberId' using the updated function getMemberIdByName
     $memberId = $this->getMemberIdByName($data[1]);
