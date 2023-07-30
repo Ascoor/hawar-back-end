@@ -38,7 +38,7 @@ class MemberController extends Controller
         public function   getMemberBySearch(Request $request)
         {
             $searchTerm = $request->input('searchTerm');
-    
+
             // Your logic to fetch members based on the category and search term
             $members = Member::where(function ($query) use ($searchTerm) {
                                  $query->where('Name', 'like', '%' . $searchTerm . '%')
@@ -47,10 +47,10 @@ class MemberController extends Controller
                                        ->orWhere('Phone', 'like', '%' . $searchTerm . '%');
                              })
                              ->get();
-    
+
             return response()->json(['data' => $members]);
         }
-    
+
 
     public function store(Request $request)
     {
@@ -95,17 +95,17 @@ public function getCategoryMembers(Request $request)
     $category = $request->input('category'); // Assuming you are sending the selected category from the frontend
 
     $categories = [
-        'work' => 'عضو عامل',
-        'affiliate' => 'عضو تابع',
-        'founding' => 'عضو مؤسس',
-        'honory' => 'عضو فخري',
-        'seasonal' => 'عضو موسمي',
+        'work' => '1',
+        'affiliate' => '2',
+        'founding' => '3',
+        'honory' => '4',
+        'seasonal' => '5',
         'athletic' => 'عضو رياضي',
         'A permit' => 'تصريح',
     ];
 
     if (array_key_exists($category, $categories)) {
-        $query = Member::where('Category', $categories[$category])->orderBy('LastPayedFees', 'desc');
+        $query = Member::where('Category_id', $categories[$category])->orderBy('last_payed_fiscal_year', 'desc');
 
         // If the category is 'عضو عامل' or 'عضو تابع', limit the result to 100 members
         if ($category === 'work' || $category === 'affiliate') {
