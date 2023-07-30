@@ -133,9 +133,11 @@ class OldMembersSeeder extends Seeder
                 'category_id' => $data[7],
                 'relation_id' => $data[8],
                 'status_id' => $data[9],
-                'phone' => $data[10],
-
+                'Phone' => $this->formatPhoneNumber($data[10]),
+                'email' => $this->generateEmail($data[0]),
                 'address' => $data[11],
+                'Age' => $this->calculateAge($data[4]), // Calculate age from the BOD column
+
                 'profession' => $data[12],
                 'relegion' => $data[13],
                 'postal_code' => '35111',
@@ -158,21 +160,7 @@ class OldMembersSeeder extends Seeder
                 $member->timestamps = false;
                 $member->save();
 
-          // Format the phone number
-          $formattedPhoneNumber = $this->formatPhoneNumber($data[10]);
-          $rowData['phone'] = $formattedPhoneNumber;
-
-          // Calculate the age based on the date of birth
-          $age = $this->calculateAge($data[4]);
-          // You can use the age in your logic as needed.
-
-          // Generate email address for the member
-          $regNum = $data[3]; // Replace this with the appropriate field that holds the registration number.
-          $email = $this->generateEmail($regNum);
-          $rowData['email'] = $email;
-
-          // Determine the sub_category_id based on the religion
-          $subCategoryId = null;
+      
           if ($data[13] === 'مسلم') {
               $subCategoryId = 1;
           } elseif ($data[13] === 'مسيحى') {
@@ -189,72 +177,72 @@ class OldMembersSeeder extends Seeder
 
               DB::table('member_category')->insert($memberCategoryData);
           }
-//                 // Map gender names to their corresponding sub_category_ids
-// $genderSubCategoryMap = [
-//     'ذكر' => 1,
-//     'أنثى' => 2,
-// ];
+                // Map gender names to their corresponding sub_category_ids
+$genderSubCategoryMap = [
+    '1' => 1,
+    '2' => 2,
+];
 
-// // Assuming that $data[6] contains the gender, you can use the following code to check if it exists in the genderSubCategoryMap
-// $gender = $data[13];
+// Assuming that $data[6] contains the gender, you can use the following code to check if it exists in the genderSubCategoryMap
+$gender = $data[6];
 
-// // Check if the gender exists in the genderSubCategoryMap
-// if (array_key_exists($gender, $genderSubCategoryMap)) {
-//     // If the gender exists in the genderSubCategoryMap, use the corresponding sub_category_id
-//     $subCategoryId = $genderSubCategoryMap[$gender];
+// Check if the gender exists in the genderSubCategoryMap
+if (array_key_exists($gender, $genderSubCategoryMap)) {
+    // If the gender exists in the genderSubCategoryMap, use the corresponding sub_category_id
+    $subCategoryId = $genderSubCategoryMap[$gender];
 
-//     // Check if the combination of member_id and sub_category_id already exists in the member_category table
-//     $existingData = DB::table('member_category')
-//         ->where('member_id', $member->id)
-//         ->where('sub_category_id', $subCategoryId)
-//         ->first();
+    // Check if the combination of member_id and sub_category_id already exists in the member_category table
+    $existingData = DB::table('member_category')
+        ->where('member_id', $member->id)
+        ->where('sub_category_id', $subCategoryId)
+        ->first();
 
-//     if (!$existingData) {
-//         // If the combination does not exist, insert the data into the member_category table
-//         $memberCategoryData = [
-//             'member_id' => $member->id,
-//             'category_id' => 5, // Set category_id to 5 as it's the default value for all
-//             'sub_category_id' => $subCategoryId,
-//         ];
-//         DB::table('member_category')->insert($memberCategoryData);
-//     }
-// }
+    if (!$existingData) {
+        // If the combination does not exist, insert the data into the member_category table
+        $memberCategoryData = [
+            'member_id' => $member->id,
+            'category_id' => 5, // Set category_id to 5 as it's the default value for all
+            'sub_category_id' => $subCategoryId,
+        ];
+        DB::table('member_category')->insert($memberCategoryData);
+    }
+}
 
-//                 // Map subcategory names to their corresponding IDs
-// $subCategoryMap = [
-//     'عضو عامل' => 1,
-//     'عضو تابع' => 2,
-//     'عضو مؤسس' => 3,
-//     'عضو فخري' => 4,
-//     'عضو موسمي' => 5,
-//     'عضو رياضى' => 7,
-//     'تصريح' => 8,
-// ];
+                // Map subcategory names to their corresponding IDs
+$subCategoryMap = [
+    '1' => 1,
+    '2' => 2,
+    '3' => 3,
+    '4' => 4,
+    '5' => 5,
+    'عضو رياضى' => 7,
+    'تصريح' => 8,
+];
 
-// // Assuming that $data[11] contains the subcategory name, you can use the following code to check if it exists in the subCategoryMap
-// $subCategoryName = $data[11];
+// Assuming that $data[11] contains the subcategory name, you can use the following code to check if it exists in the subCategoryMap
+$subCategoryName = $data[7];
 
-// // Check if the subcategory exists in the subCategoryMap
-// if (array_key_exists($subCategoryName, $subCategoryMap)) {
-//     // If the subcategory exists in the subCategoryMap, use the corresponding sub_category_id
-//     $subCategoryId = $subCategoryMap[$subCategoryName];
+// Check if the subcategory exists in the subCategoryMap
+if (array_key_exists($subCategoryName, $subCategoryMap)) {
+    // If the subcategory exists in the subCategoryMap, use the corresponding sub_category_id
+    $subCategoryId = $subCategoryMap[$subCategoryName];
 
-//     // Check if the combination of member_id and sub_category_id already exists in the member_category table
-//     $existingData = DB::table('member_category')
-//         ->where('member_id', $member->id)
-//         ->where('sub_category_id', $subCategoryId)
-//         ->first();
+    // Check if the combination of member_id and sub_category_id already exists in the member_category table
+    $existingData = DB::table('member_category')
+        ->where('member_id', $member->id)
+        ->where('sub_category_id', $subCategoryId)
+        ->first();
 
-//     if (!$existingData) {
-//         // If the combination does not exist, insert the data into the member_category table
-//         $memberCategoryData = [
-//             'member_id' => $member->id,
-//             'category_id' => 1, // Set category_id to 1 as it's the default value for all
-//             'sub_category_id' => $subCategoryId,
-//         ];
-//         DB::table('member_category')->insert($memberCategoryData);
-//     }
-// }
+    if (!$existingData) {
+        // If the combination does not exist, insert the data into the member_category table
+        $memberCategoryData = [
+            'member_id' => $member->id,
+            'category_id' => 1, // Set category_id to 1 as it's the default value for all
+            'sub_category_id' => $subCategoryId,
+        ];
+        DB::table('member_category')->insert($memberCategoryData);
+    }
+}
 
                 // تنفيذ عملية المعاملة كل مجموعة من الصفوف
                 if ($counter % $chunkSize === 0) {

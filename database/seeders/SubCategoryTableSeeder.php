@@ -168,7 +168,7 @@ class SubCategoryTableSeeder extends Seeder
                 [
                     'category_id' => 4,
                     'name_en' => 'Judges',
-                    'name_ar' => 'القضاه',
+                    'name_ar' => 'هيئة قضائية',
                 ],
                 [
                     'category_id' => 4,
