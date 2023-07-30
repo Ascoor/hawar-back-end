@@ -11,6 +11,7 @@ class HomeController extends Controller
     public function getMemberCounts()
 {
     $memberWork = '1';
+
     $memberPart = '2';
     $memberMale = '1';
     $memberFemale = '2';
@@ -30,11 +31,11 @@ class HomeController extends Controller
     $currentYear = now()->year;
 
     // Get the count of members who paid the fee in the current year
-    $membersPaidCurrentYear = MemberFee::whereYear('FeeDate', $currentYear)->count();
+    $membersPaidCurrentYear = Member::whereYear('last_payed_fiscal_year', $currentYear)->count();
 
     // Get the count of members who paid the fee in the previous year
     $previousYear = $currentYear - 1;
-    $membersPaidPreviousYear = MemberFee::whereYear('FeeDate', $previousYear)->count();
+    $membersPaidPreviousYear = Member::whereYear('last_payed_fiscal_year', $previousYear)->count();
 
     return response()->json([
         'workMemberCount' => $workMemberCount,
