@@ -146,6 +146,11 @@ class SubCategoryTableSeeder extends Seeder
                         'name_en' => 'unpaid',
                         'name_ar' => 'غير مسدد',
                     ],
+                    [
+                        'category_id' => 3,
+                        'name_en' => 'delete',
+                        'name_ar' => 'محذوف',
+                    ],
                 ];
 
             // Assuming you have the ID of the 'excludedCategories' category as 4
