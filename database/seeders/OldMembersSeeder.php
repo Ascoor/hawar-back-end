@@ -160,10 +160,10 @@ class OldMembersSeeder extends Seeder
                 $member->timestamps = false;
                 $member->save();
 
-      
-          if ($data[13] === 'مسلم') {
+
+          if ($data[13] === '1') {
               $subCategoryId = 1;
-          } elseif ($data[13] === 'مسيحى') {
+          } elseif ($data[13] === '2') {
               $subCategoryId = 2;
           }
 
