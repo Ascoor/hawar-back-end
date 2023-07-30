@@ -25,10 +25,7 @@ class CsvInsertSeeder extends Seeder
 }
 
 
-    private function getMemberFeeByFeeId($feeId)
-  {
-      return MemberFee::where('FeeId', $feeId)->first();
-  }
+
 
   private function getLastProcessedRow()
   {
@@ -40,67 +37,75 @@ class CsvInsertSeeder extends Seeder
   }
     public function run()
     {
-        $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
-        DB::beginTransaction();
 
-        $output = new ConsoleOutput();
-        $chunkSize = 1000;
-        $batchSize = 50000;
-        $lastProcessedRow = $this->getLastProcessedRow() + 1;
-        $counter = 0;
-        $rowsInserted = 0; // Initialize the counter for rows inserted
+    $csvFile = fopen(public_path('data/member_fees.csv'), 'r');
+    DB::beginTransaction();
 
-        try {
+    $output = new ConsoleOutput();
+    $chunkSize = 1000;
+    $batchSize = 50000;
+    $lastProcessedRow = $this->getLastProcessedRow() + 1;
+    $counter = 0;
+    $rowsInserted = 0; // Initialize the counter for rows inserted
 
-while (($data = fgetcsv($csvFile)) !== false) {
-    $counter++;
+    try {
+        while (($data = fgetcsv($csvFile)) !== false) {
+            $counter++;
 
-    if ($counter < $lastProcessedRow) {
-        continue;
-    }
-
-    $output->writeln("File under check: $counter");
-
-    // ... (existing code)
-
-    $rowData = [
-
-        'member_id' => $this->getMemberIdByName($data[1]),
-        'name' => $data[1],
-        'fee_id' => $data[7],
-        'fee_year' => $data[8],
-        'fee_amount' => $data[9],
-        'fee_date' => $data[10],
-        'fee_recieptNumber' => $data[11],
-        'fee_status' => $data[12],
-    ];
-
-    $memberFee = new MemberFee($rowData);
-    $memberFee->timestamps = false;
-    $memberFee->save();
-
-
-                if ($counter % $chunkSize === 0) {
-                    DB::commit();
-                    DB::beginTransaction();
-                    $this->storeLastProcessedRow($counter);
-                }
+            if ($counter < $lastProcessedRow) {
+                continue;
             }
 
-            DB::commit();
-            fclose($csvFile);
-            $this->storeLastProcessedRow($counter);
+            $output->writeln("File under check: $counter");
 
-            $output->writeln("تم إدراج $rowsInserted صف في قاعدة البيانات.");
+            // ... (existing code)
 
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            fclose($csvFile);
-            dd($e->getMessage());
+            $rowData = [
+                'member_id' => $this->getMemberIdByName($data[1]),
+                'name' => $data[1],
+                'fee_id' => $data[7],
+                'fee_year' => $data[8],
+                'fee_amount' => $data[9],
+                'fee_date' => $data[10],
+                'fee_recieptNumber' => $data[11],
+                'fee_status' => $data[12],
+            ];
+
+            $memberFee = new MemberFee($rowData);
+            $memberFee->timestamps = false;
+            $memberFee->save();
+
+            $rowsInserted++; // Increment the rows inserted counter
+
+            if ($rowsInserted % $batchSize === 0) {
+                DB::commit();
+                sleep(7); // Sleep for 7 seconds every 50,000 rows
+                DB::beginTransaction();
+                $this->storeLastProcessedRow($counter);
+            }
+
+            if ($rowsInserted % $chunkSize === 0) {
+                DB::commit();
+                DB::beginTransaction();
+                $this->storeLastProcessedRow($counter);
+            }
         }
+
+        DB::commit();
+        fclose($csvFile);
+        $this->storeLastProcessedRow($counter);
+
+        $output->writeln("تم إدراج $rowsInserted صف في قاعدة البيانات.");
+
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        fclose($csvFile);
+        dd($e->getMessage());
+    }
+}
     }
 
 
 
 
-}
+
