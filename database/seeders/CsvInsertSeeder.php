@@ -14,7 +14,7 @@ class CsvInsertSeeder extends Seeder
 {
     private function getMemberIdByName($name)
 {
-    $member = Member::where('ame', $name)->first();
+    $member = Member::where('name', $name)->first();
 
     if ($member) {
         $member_id = $member->id; // Use the 'id' column as 'member_id' is now the primary key in the members table
