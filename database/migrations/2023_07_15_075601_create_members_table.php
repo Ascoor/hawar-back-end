@@ -43,10 +43,10 @@ class CreateMembersTable extends Migration
             $table->string('mem_HomePhone')->nullable();
             $table->string('player')->nullable();
             $table->string('team_id')->nullable();
-            $table->string('Photo')->nullable();
+            $table->string('photo')->nullable();
             $table->string('excluded_categories_id')->nullable();
             $table->string('date_of_subscription')->nullable();
-            				
+
             $table->timestamps();
         });
     }

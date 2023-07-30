@@ -133,10 +133,10 @@ class OldMembersSeeder extends Seeder
                 'category_id' => $data[7],
                 'relation_id' => $data[8],
                 'status_id' => $data[9],
-                'Phone' => $this->formatPhoneNumber($data[10]),
+                'phone' => $this->formatPhoneNumber($data[10]),
                 'email' => $this->generateEmail($data[0]),
                 'address' => $data[11],
-                'Age' => $this->calculateAge($data[4]), // Calculate age from the BOD column
+                'age' => $this->calculateAge($data[4]), // Calculate age from the BOD column
 
                 'profession' => $data[12],
                 'relegion' => $data[13],
@@ -150,7 +150,7 @@ class OldMembersSeeder extends Seeder
                     'mem_WorkPhone'=>$data[23],
                     'mem_HomePhone'=>$data[24],
 
-           'Photo'=>$data[25],
+           'photo'=>$data[25],
            'date_of_subscription'=>$data[26],
            'excluded_categories_id'=>$data[27]
 
