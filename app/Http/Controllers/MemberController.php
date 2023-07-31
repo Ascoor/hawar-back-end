@@ -38,20 +38,21 @@ class MemberController extends Controller
 
             return response()->json($parnetMembers);
         }
-        public function   getMemberBySearch(Request $request)
-        {
-            $searchTerm = $request->input('searchTerm');
+        public function getMemberBySearch(Request $request)
+{
+    $searchTerm = $request->input('searchTerm');
 
-            // Your logic to fetch members based on the category and search term
-            $members = Member::where(function ($query) use ($searchTerm) {
-                                 $query->where('name', 'like', '%' . $searchTerm . '%')
-                                       ->orWhere('member_id', 'like', '%' . $searchTerm . '%')
-                                       ->orWhere('phone', 'like', '%' . $searchTerm . '%');
-                             })
-                             ->get();
+    // Your logic to fetch members based on the category and search term
+    $members = Member::where(function ($query) use ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('member_id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('phone', 'like', '%' . $searchTerm . '%');
+        })
+        ->paginate(25); // Paginate the results with 25 members per page
 
-            return response()->json(['data' => $members]);
-        }
+    return response()->json(['data' => $members]);
+}
+
 
     public function show($id)
     {
