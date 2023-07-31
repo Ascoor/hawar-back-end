@@ -15,7 +15,7 @@ class HomeController extends Controller
     $memberPart = '2';
     $memberMale = '1';
     $memberFemale = '2';
-    $membersIgnored = 'مسقطة';
+    $membersIgnored = '2';
     $ageOver25 = 25;
     $ageOver60 = 60;
 
