@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Member;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
@@ -51,24 +54,6 @@ class MemberController extends Controller
             return response()->json(['data' => $members]);
         }
 
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            // Add validation rules for the fields you want to validate during member creation.
-            'Name' => 'required|string|max:255',
-            'FamilyId' => 'required|string|max:255',
-            'Category' => 'required|string|max:255',
-            'City' => 'required|string|max:255',
-            'State' => 'required|string|max:255',
-            'Address' => 'required|string',
-            // Add more validation rules for other fields if necessary.
-        ]);
-
-        $member = Member::create($request->all());
-        return response()->json($member, 201);
-    }
-
     public function show($id)
     {
         $member = Member::findOrFail($id);
@@ -90,6 +75,25 @@ class MemberController extends Controller
 
 
 }
+public function getCategoryAndSubCategory($memberId)
+{
+    $memberCategory = DB::table('member_category')
+                        ->where('member_id', $memberId)
+                        ->first();
+
+    if (!$memberCategory) {
+        return response()->json(['error' => 'Member category not found'], 404);
+    }
+
+    $category = Category::find($memberCategory->category_id);
+    $subcategory = SubCategory::find($memberCategory->sub_category_id);
+
+    return response()->json([
+        'category' => $category,
+        'subcategory' => $subcategory,
+    ], 200);
+}
+
 public function getCategoryMembers(Request $request)
 {
     $category = $request->input('category'); // Assuming you are sending the selected category from the frontend

@@ -42,6 +42,7 @@ Route::get('/members', [MemberController::class, 'index']);
 Route::get('/member-category', [MemberController::class, 'getCategoryMembers']);
 
 Route::get('/members/search', [MemberController::class, 'getMemberBySearch']);
+Route::get('/member-category/{memberId}', 'MemberSController@getCategoryAndSubCategory');
 
 
 
