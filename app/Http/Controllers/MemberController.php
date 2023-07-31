@@ -44,10 +44,9 @@ class MemberController extends Controller
 
             // Your logic to fetch members based on the category and search term
             $members = Member::where(function ($query) use ($searchTerm) {
-                                 $query->where('Name', 'like', '%' . $searchTerm . '%')
-                                       ->orWhere('RegNum', 'like', '%' . $searchTerm . '%')
-                                       ->orWhere('BOD', 'like', '%' . $searchTerm . '%')
-                                       ->orWhere('Phone', 'like', '%' . $searchTerm . '%');
+                                 $query->where('name', 'like', '%' . $searchTerm . '%')
+                                       ->orWhere('member_id', 'like', '%' . $searchTerm . '%')
+                                       ->orWhere('phone', 'like', '%' . $searchTerm . '%');
                              })
                              ->get();
 
